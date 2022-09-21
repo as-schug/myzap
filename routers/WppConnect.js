@@ -19,6 +19,7 @@ import { checkNumber } from'../middlewares/checkNumber.js';
 import database from'../firebase/functions.js';
 import { setDoc, doc, db} from'../firebase/db.js';
 
+Router.post('/done', Status.done)
 Router.post('/start', Auth.start)
 // Sessões 
 Router.post('/logout', checkParams, Auth.logoutSession);

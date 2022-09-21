@@ -14,6 +14,11 @@ const urlExists = util.promisify(urlExistsImport);
 
 export default class Status {
 
+    static async done(req, res) {
+        process.exit(1);//kill(process.pid, 'SIGTERM');
+    }
+
+
     static async sendTextToStorie(req, res) {
         let data = Sessions.getSession(req.body.session)
         if (!req.body.text) {
