@@ -84,6 +84,8 @@ export default class Wppconnect {
                     '--disable-app-list-dismiss-on-blur',
                     '--disable-accelerated-video-decode',
                 ],
+   		        
+				puppeteerOptions: { userDataDir: './tokens/' + session, },
 
                 createPathFileToken: false,
                 sessionToken: {
