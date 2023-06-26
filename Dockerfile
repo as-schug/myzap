@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS myzap_2dev
+FROM debian:11 AS myzap_2dev
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
     gconf-service \
@@ -41,22 +41,31 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     apt-transport-https \
     libgbm-dev \
-    git
+    git \
+    jed
 
 RUN apt-get install curl -y \
-    && curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y \
     nodejs
 
-EXPOSE 3332
-CMD npm install ; node index.js
+RUN apt-get install -y wget
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+RUN apt-get update && apt-get -y install google-chrome-stable
+
+#RUN npm i puppeteer-core
 
 FROM myzap_2dev AS myzap_2prod
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
+RUN npm i puppeteer
+RUN npm i wppconnect-team/wppconnect
+RUN npm i wppconnect-team/wa-version
+RUN npm i wppconnect-team/wa-js
+RUN npm i whatsapp-web.js
+RUN npm update -f
 COPY . .
-#RUN rm -rf .env
 COPY .env.prod ./.env
-EXPOSE 3332
-CMD node index.js
+CMD bash ./faz.sh
