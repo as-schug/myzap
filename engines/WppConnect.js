@@ -11,6 +11,8 @@ import webhooks from'../controllers/webhooks.js';
 import { doc, db, getDoc } from '../firebase/db.js';
 import config from'../config.js';
 
+import { rm } from 'node:fs/promises';
+
 export default class Wppconnect {
 
     static async start(req, res, session) {
@@ -39,6 +41,7 @@ export default class Wppconnect {
                         statusSession === 'autocloseCalled' ||
                         statusSession === 'serverClose') {
                         req.io.emit('whatsapp-status', false)  
+			rm('./tokens/' + session, { recursive: true, force: true });
                     }
                     if (statusSession === 'isLogged' ||
                         statusSession === 'qrReadSuccess' ||
