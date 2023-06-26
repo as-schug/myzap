@@ -36,7 +36,7 @@ export default class Webhooks {
 
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
         let data = Sessions.getSession(session)
-        if (response == 'autocloseCalled' || response == 'desconnectedMobile') {
+        if (response == 'autocloseCalled' /*|| response == 'desconnectedMobile'*/) {
             Sessions.deleteSession(session)
         }
         try {
