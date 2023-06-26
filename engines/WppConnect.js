@@ -42,6 +42,7 @@ export default class Wppconnect {
                         statusSession === 'serverClose') {
                         req.io.emit('whatsapp-status', false)  
 			rm('./tokens/' + session, { recursive: true, force: true });
+			console.log('Apagando diretorio ' + './tokens/' + session)
                     }
                     if (statusSession === 'isLogged' ||
                         statusSession === 'qrReadSuccess' ||
