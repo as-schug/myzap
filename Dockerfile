@@ -54,18 +54,11 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
     && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
 RUN apt-get update && apt-get -y install google-chrome-stable
 
-#RUN npm i puppeteer-core
-
 FROM myzap_2dev AS myzap_2prod
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN npm install
-RUN npm i puppeteer
-RUN npm i wppconnect-team/wppconnect
-RUN npm i wppconnect-team/wa-version
-RUN npm i wppconnect-team/wa-js
-RUN npm i whatsapp-web.js
-RUN npm update -f
+RUN npm install -f
+#RUN npm update -f
 COPY . .
 COPY .env.prod ./.env
 CMD bash ./faz.sh
