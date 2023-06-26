@@ -7,6 +7,7 @@
 import Sessions from '../controllers/sessions.js';
 import superagent  from 'superagent';
 import 'superagent-queue';
+import database from '../firebase/functions.js';
 import dotenv from 'dotenv'
 dotenv.config();
 //require('superagent-queue');
@@ -37,7 +38,8 @@ export default class Webhooks {
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
         let data = Sessions.getSession(session)
         if (response == 'autocloseCalled' /*|| response == 'desconnectedMobile'*/) {
-            Sessions.deleteSession(session)
+	    await database.deleteSession2(session)	    
+            await Sessions.deleteSession(session)
         }
         try {
             if (response == 'qrReadSuccess' || response == 'connected') {

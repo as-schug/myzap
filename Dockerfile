@@ -58,8 +58,8 @@ FROM myzap_2dev AS myzap_2prod
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install -f
-RUN npm update -f
-RUN dir
+#RUN npm update -f
+#RUN dir
 COPY . .
 COPY .env.prod ./.env
 CMD bash ./faz.sh

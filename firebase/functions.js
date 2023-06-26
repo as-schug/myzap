@@ -136,4 +136,13 @@ export default class Firebase {
             res.status(400).send(error.message);
         }
     }
+    static async deleteSession2(session) {
+        try {
+            const data = await getDoc(doc(db, "Sessions", session));     
+            if (data.exists()) {
+                await deleteDoc(doc(db, "Sessions", session));                
+            }
+        } catch (error) {            
+        }
+    }
 }
