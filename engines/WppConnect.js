@@ -91,7 +91,7 @@ export default class Wppconnect {
                     '--disable-accelerated-video-decode',
                 ],
    		        
-//				puppeteerOptions: { userDataDir: './tokens/' + session, },
+		puppeteerOptions: { userDataDir: './tokens/' + session, },
 
                 createPathFileToken: false,
                 sessionToken: {
