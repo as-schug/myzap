@@ -11,6 +11,7 @@ import SessionsDB from "./firebase/model.js";
 import { snapshot} from './firebase/db.js';
 import request from "request-promise";
 import config from "./config.js";
+import { existsSync } from 'node:fs';
 
 async function getAllSessions() {
     try {
@@ -34,7 +35,9 @@ async function getAllSessions() {
                     doc.data().WAToken2,
                     doc.data().Engine
                 );
-                SessionsArray.push(Session);
+		if(existsSync('./tokens/' + doc.data().session)) {			   
+                   SessionsArray.push(Session);
+		}
             });
             return (SessionsArray);
         }
@@ -55,7 +58,7 @@ async function startAllSessions() {
                 var options = {
                     'method': 'POST',
                     'json': true,
-                    'url': `${config.host}:${config.port}/start`,
+                    'url': `${config.host}/start`,
                     'headers': {
                         'apitoken': item.apitoken,
                         'sessionkey': item.sessionkey
