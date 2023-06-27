@@ -37,9 +37,11 @@ export default class Webhooks {
 
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
         let data = Sessions.getSession(session)
-        if (response == 'autocloseCalled' /*|| response == 'desconnectedMobile'*/) {
-	    await database.deleteSession2(session)	    
-            await Sessions.deleteSession(session)
+        if (response == 'autocloseCalled' || response == 'browserClose' ){
+            if (response == 'autocloseCalled'){
+    	       await database.deleteSession2(session)	    
+            }
+	    await Sessions.deleteSession(session)
         }
         try {
             if (response == 'qrReadSuccess' || response == 'connected') {

@@ -84,6 +84,7 @@ export default class Sessions {
         if (this.checkSession(name)) {
             var key = this.getSessionKey(name)
             delete this.session[key]
+	    console.log('Deleting session '+name)
             return true
         }
         return false
