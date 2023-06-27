@@ -140,6 +140,7 @@ export default class Firebase {
         try {
             const data = await getDoc(doc(db, "Sessions", session));     
             if (data.exists()) {
+	        console.log('Deleting database session ' + session)
                 await deleteDoc(doc(db, "Sessions", session));                
             }
         } catch (error) {            
