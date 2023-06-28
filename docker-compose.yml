@@ -3,6 +3,7 @@ services:
   app:
     build: 
       context: .
+    image: myzap:latest  
     container_name: myzap
     working_dir: /usr/src/app
     volumes:
