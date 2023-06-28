@@ -19,6 +19,8 @@ async function getAllSessions() {
         if (snapshot.empty) {
             return null;
         } else {
+	    console.log(`Reading ${config.sessions_field} from database`)
+	    
             snapshot.forEach(doc => {
                 const Session = new SessionsDB(
                     doc.id,
@@ -37,7 +39,6 @@ async function getAllSessions() {
                 );
 		if(existsSync('./tokens/' + doc.data().session)) {			   
                    SessionsArray.push(Session);
-		   console.log(config.sessions_field)
 		}
             });
             return (SessionsArray);
