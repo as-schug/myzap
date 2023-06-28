@@ -23,7 +23,7 @@ import { deleteDoc,
 const app = initializeApp(config.firebaseConfig);
 const db = getFirestore(app);
 
-const Sessions = await collection(db, 'Sessions');
+const Sessions = await collection(db,config.sessions_field);
 const snapshot = await getDocs(Sessions);
 
 export {snapshot};

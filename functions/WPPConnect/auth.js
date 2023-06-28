@@ -72,7 +72,7 @@ export default class Auth {
                                 'Engine': process.env.ENGINE
                             }
     
-                            await setDoc(doc(db, "Sessions", session), data);
+                            await setDoc(doc(db, config.sessions_field, session), data);
     
                             res.status(200).json({
                                 "result": 200,

@@ -11,6 +11,7 @@
 
 import { Sessions, db, doc, getDoc, setDoc, snapshot, deleteDoc, addDoc} from './db.js';
 import SessionsDB from './model.js';
+import config from "../config.js";
 
 export default class Firebase {
 
@@ -85,7 +86,7 @@ export default class Firebase {
     static async getSession(req, res, next) {
         try {
             const id = req.body.id;
-            const data = await getDoc(doc(db, "Sessions", id));
+            const data = await getDoc(doc(db, config.sessions_field, id));
             if (!data.exists()) {
                 res.status(404).send('Session with the given ID not found');
             } else {
@@ -100,7 +101,7 @@ export default class Firebase {
         try {
             const id = req.body.id;
             const data = req.body;
-            await setDoc(doc(db, "Sessions", id), data);
+            await setDoc(doc(db, config.sessions_field, id), data);
             res.send('Session record updated successfuly');
         } catch (error) {
             res.status(400).send(error.message);
@@ -117,7 +118,7 @@ export default class Firebase {
                     "reason": "Session não informada"
                 })
             }
-            const data = await getDoc(doc(db, "Sessions", id));     
+            const data = await getDoc(doc(db, config.sessions_field, id));     
             if (!data.exists()) {
                 res.status(404).json({
                     result: 404,
@@ -125,7 +126,7 @@ export default class Firebase {
                     "reason": `Session ${id} não existe no firebase`
                 })
             }else {
-                await deleteDoc(doc(db, "Sessions", id));
+                await deleteDoc(doc(db, config.sessions_field, id));
                 res.status(200).json({
                     result: 200,
                     "status": "SUCCESS",
@@ -138,10 +139,10 @@ export default class Firebase {
     }
     static async deleteSession2(session) {
         try {
-            const data = await getDoc(doc(db, "Sessions", session));     
+            const data = await getDoc(doc(db, config.sessions_field, session));     
             if (data.exists()) {
 	        console.log('Deleting database session ' + session)
-                await deleteDoc(doc(db, "Sessions", session));                
+                await deleteDoc(doc(db, config.sessions_field, session));                
             }
         } catch (error) {            
         }

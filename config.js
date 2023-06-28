@@ -16,6 +16,7 @@ dotenv.config();
 const {
   PORT,
   HOST,
+  SESSIONS_FIELD,
   TOKEN,
   HTTPS,
   DOMAIN_SSL,
@@ -36,11 +37,13 @@ assert(PORT, 'PORT is required, please set the PORT variable value in the .env f
 assert(HOST, 'HOST is required, please set the HOST variable value in the .env file');
 assert(TOKEN, 'TOKEN is required, please set the ENGINE variable value in the .env file');
 assert(ENGINE, 'ENGINE is required, please set the ENGINE variable value in the .env file');
+assert(SESSIONS_FIELD, 'SESSIONS_FIELD is required, please set the SESSIONS_FIELD variable value in the .env file');
 
 export default {
   port: PORT,
   host: HOST,
   token: TOKEN,
+  sessions_field: SESSIONS_FIELD,
   https: HTTPS,
   host_ssl: DOMAIN_SSL,
   engine: ENGINE,

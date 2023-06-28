@@ -4,3 +4,4 @@ tokens/
 .env
 .env.prod
 teste.js
+package-lock.json

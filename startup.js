@@ -37,6 +37,7 @@ async function getAllSessions() {
                 );
 		if(existsSync('./tokens/' + doc.data().session)) {			   
                    SessionsArray.push(Session);
+		   console.log(config.sessions_field)
 		}
             });
             return (SessionsArray);

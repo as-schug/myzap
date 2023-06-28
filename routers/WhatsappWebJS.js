@@ -86,7 +86,7 @@ Router.post('/start', async (req, res) => {
 
                         }
 
-                        await setDoc(doc(db, "Sessions", session), data);
+                        await setDoc(doc(db, config.sessions_field, session), data);
 
                         res.status(200).json({
                             "result": 200,
