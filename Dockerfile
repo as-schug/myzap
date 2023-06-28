@@ -56,6 +56,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 RUN apt-get update && apt-get -y install google-chrome-stable
 
 COPY package*.json ./
+RUN npm install -g npm 
 RUN npm install -f
 COPY . .
 CMD bash ./faz.sh
