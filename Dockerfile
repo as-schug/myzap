@@ -42,7 +42,8 @@ RUN apt-get update && apt-get install -y \
     apt-transport-https \
     libgbm-dev \
     git \
-    jed
+    jed \
+    procps
 
 RUN apt-get install curl -y \
     && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
