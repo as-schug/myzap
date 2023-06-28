@@ -24,10 +24,10 @@ export default class Webhooks {
                     .send(response)
                     .queue('messages')
                     .end(function () {
-                        console.log('webhooks receive message....')
+                        console.log('webhooks wh_messages message....')
                     });
                 if (data.wh_message == '') {
-                    console.log('Webhook no defined')
+                    console.log('Webhook wh_messages not defined')
                 }
             }
         } catch (error) {
@@ -69,10 +69,10 @@ export default class Webhooks {
                     .send(object)
                     .queue('connection')
                     .end(function () {
-                        console.log('webhooks connect status....')
+                        console.log('webhooks wh_messages status....')
                     });
                 if (data.wh_connect == '') {
-                    console.log('Webhook no defined')
+                    console.log('Webhook wh_connect not defined')
                 }
             }
 
@@ -91,10 +91,10 @@ export default class Webhooks {
                     .send(response)
                     .queue('status')
                     .end(function () {
-                        console.log('webhooks status message....')
+                        console.log('webhooks wh_status message....')
                     });
                 if (data.wh_status == '') {
-                    console.log('Webhook no defined')
+                    console.log('Webhook wh_status not defined')
                 }
             }
 
@@ -118,10 +118,10 @@ export default class Webhooks {
                     .send(object)
                     .queue('qrcode')
                     .end(function () {
-                        console.log('webhooks status message....')
+                        console.log('webhooks wh_qrcode message....')
                     });
                 if (data.wh_qrcode == '') {
-                    console.log('Webhook no defined')
+                    console.log('Webhook wh_qrcode not defined')
                 }
             }
 
