@@ -12,7 +12,7 @@ import util from 'util';
 import urlExistsImport from 'url-exists';
 const urlExists = util.promisify(urlExistsImport);
 import moment from 'moment';
-import mkdirp from 'mkdirp';
+import {mkdirp} from 'mkdirp';
 
 export default class Status {
 
@@ -70,10 +70,10 @@ export default class Status {
 
 	const currentDate = moment().format('YYYYMMDD-HHmmss');
 	const randomPart = Math.random().toString(36).substring(2, 10);
-	const directoryPath = "./webhook/" + session + "/" + event;
-	let fileName = directoryPath + `/${currentDate}-${randomPart}.json`;
+	const directoryPath = "./webhook/" + session + "/" + event + "/";
+	let fileName = directoryPath + `${currentDate}-${randomPart}.json`;
 	if (!fs.existsSync(directoryPath)) {
-		mkdirp(directoryPath, (err) => {
+		await mkdirp(directoryPath, { }, (err) => {
 			if (err) {
       				console.error('Erro ao criar diretórios:', err);
 				return res.status(200).json({
@@ -84,7 +84,12 @@ export default class Status {
  		})
 	}
 
-	fs.writeFile(fileName, JSON.stringify(req.body),(err) => {})
+	fs.chmodSync(directoryPath,0o777,() =>{})
+
+	fs.writeFile(fileName, JSON.stringify(req.body),{mode: 0o777},(err) => {
+		fs.chmodSync(fileName,0o666,() =>{})
+
+	})
 
 	return res.status(200).json({
                 result: 200,
