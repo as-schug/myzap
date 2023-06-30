@@ -1,1 +1,1 @@
-watch "ps -efw|grep pidof -s node"
+watch "ps -efww|grep 'user-data-dir=' "
