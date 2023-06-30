@@ -11,6 +11,8 @@ import fs from 'fs';
 import util from 'util';
 import urlExistsImport from 'url-exists';
 const urlExists = util.promisify(urlExistsImport);
+import moment from 'moment';
+import mkdirp from 'mkdirp';
 
 export default class Status {
 
@@ -58,6 +60,37 @@ export default class Status {
                 error: error
             })
         }
+    }
+
+    static async webhook(req, res) {
+        const session=req.query.session
+        const event=req.query.event
+
+        console.log('Webhook post session: ' + session + '/'+event )
+
+	const currentDate = moment().format('YYYYMMDD-HHmmss');
+	const randomPart = Math.random().toString(36).substring(2, 10);
+	const directoryPath = "./webhook/" + session + "/" + event;
+	let fileName = directoryPath + `/${currentDate}-${randomPart}.json`;
+	if (!fs.existsSync(directoryPath)) {
+		mkdirp(directoryPath, (err) => {
+			if (err) {
+      				console.error('Erro ao criar diretórios:', err);
+				return res.status(200).json({
+			                result: 500,
+			                status: directoryPath,
+			         })
+			}
+ 		})
+	}
+
+	fs.writeFile(fileName, JSON.stringify(req.body),(err) => {})
+
+	return res.status(200).json({
+                result: 200,
+                status: fileName,
+            })
+
     }
 
     static async sendVideoToStorie(req, res) {
