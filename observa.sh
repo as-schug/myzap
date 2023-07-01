@@ -1,1 +1,1 @@
-watch "ps -efww|grep 'user-data-dir=' "
+watch "ps -efww|grep '\-\-user-data-dir=' "
