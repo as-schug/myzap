@@ -83,7 +83,7 @@ async function startAllSessions() {
                 }).catch(error => {
                     console.log(error)
                 })
-		await sleep(5000)
+		await sleep(10000)
             }
         }
     }
