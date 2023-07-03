@@ -13,6 +13,10 @@ import request from "request-promise";
 import config from "./config.js";
 import { existsSync } from 'node:fs';
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+  
 async function getAllSessions() {
     try {
         const SessionsArray = [];
@@ -56,7 +60,7 @@ async function startAllSessions() {
             console.log('####### Missing or insufficient permissions. #######')
             console.log('### Verifique as permissões de escrita e leitura ###')
         } else {
-            dados.map((item) => {
+	    for(const item of dados){
                 var options = {
                     'method': 'POST',
                     'json': true,
@@ -79,8 +83,8 @@ async function startAllSessions() {
                 }).catch(error => {
                     console.log(error)
                 })
-            });
-
+		await sleep(5000)
+            }
         }
     }
 }
