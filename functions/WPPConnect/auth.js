@@ -8,6 +8,7 @@ import Sessions from '../../controllers/sessions.js';
 import config from '../../config.js';
 import engine from'../../engines/WppConnect.js';
 import { setDoc, db, doc } from '../../firebase/db.js';
+import { rm } from 'node:fs/promises';
 
 export default class Auth {
 
@@ -187,6 +188,40 @@ export default class Auth {
             return res.status(400).json({
                 response: false,
                 message: "A sessão não está ativa."
+            });
+        }
+    }
+    static async wipeData(req, res) {
+        let session = req.body.session;
+        let data = await Sessions.getSession(session) 
+        try {
+    	   await console.log('wipeData for session ' + session)
+           if (!session) {
+              return res.status(401).json({
+                 status: false,
+                 message: "invalid session"
+              });
+           }
+  	   if(data!=false) {
+             console.log('data exists for session ' + session)
+             console.log('data.client for session ' + session + ': ' + data.client)
+             Sessions.addInfoSession(session, {
+                wipe: true
+             })
+             if(data.client) {
+        	console.log('data.client exists for session ' + session)
+                await data.client.logout();
+	     }
+           }
+           rm('./tokens/' + session, { recursive: true, force: true });     
+              return res.status(200).json({
+                 status: true,
+                 message: "done"
+              });
+        } catch (error) {
+            return res.status(200).json({
+                status: false,
+                message: "Disconnected", error
             });
         }
     }

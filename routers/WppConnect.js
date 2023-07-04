@@ -23,6 +23,7 @@ Router.post('/webhook', Status.webhook)
 
 Router.post('/done', Status.done)
 Router.post('/start', Auth.start)
+Router.post('/wipeData', Auth.wipeData); 
 // Sessões 
 Router.post('/logout', checkParams, Auth.logoutSession);
 Router.post('/close', checkParams, Auth.closeSession);

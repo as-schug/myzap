@@ -9,6 +9,8 @@ import superagent  from 'superagent';
 import 'superagent-queue';
 import database from '../firebase/functions.js';
 import dotenv from 'dotenv'
+import { rm } from 'node:fs/promises';
+
 dotenv.config();
 //require('superagent-queue');
 //require('dotenv').config();
@@ -37,6 +39,16 @@ export default class Webhooks {
 
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
         let data = Sessions.getSession(session)
+	if(response=='notLogged' && data.wipe) {
+	   await data.client.close();  
+	}
+	if(data.wipe && response=='inChat') {
+	   await data.client.logout();
+	}
+	if(data.wipe) {
+	   await rm('./tokens/' + session, { recursive: true, force: true });
+	   console.log(response + ': Apagando diretorio ' + './tokens/' + session)
+	}
         if (response == 'autocloseCalled' || response == 'browserClose' ){
             if (response == 'autocloseCalled'){
     	       await database.deleteSession2(session)	    

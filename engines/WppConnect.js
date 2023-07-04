@@ -39,6 +39,7 @@ export default class Wppconnect {
                     if (statusSession === 'browserClose' ||
                         statusSession === 'qrReadFail' ||
                         statusSession === 'autocloseCalled' ||
+			statusSession === 'notLogged' || 
                         statusSession === 'serverClose') {
                         req.io.emit('whatsapp-status', false)  
 			if(statusSession === 'autocloseCalled') {
@@ -102,7 +103,6 @@ export default class Wppconnect {
                 }
 
             })
-
             wppconnect.defaultLogger.level = 'silly';
             let info = await client.getWid()
             let tokens = await client.getSessionTokenBrowser()
