@@ -25,20 +25,17 @@ export default class Auth {
                     let existSession = Sessions.checkSession(session)
                     if (!existSession) {
                         init(session)
-                    }
-                    if (existSession) {
+                    } else {
                         let data = Sessions.getSession(session)
-                        if (data.status !== 'inChat' && data.status !== 'isLogged') {
-                            init(session)
-                        } else {
-                            res.status(400).json({
-                                result: 400,
+      		        console.log(statusSession + ': Session started/starting: ' + config.token)
+
+                        res.status(409).json({
+                                result: 409,
                                 "status": "FAIL",
-                                "reason": "there is already a session with that name",
+                                "reason": "there is already a session with that name: " + config.token,
                                 "status": data.status
                             })
-                        }
-                    }
+                     }
     
                     async function init(session) {
                         Sessions.checkAddUser(session)
