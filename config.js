@@ -30,7 +30,9 @@ const {
   MESSAGING_SENDER_ID,
   APP_ID,
   START_ALL_SESSIONS,
-  FORCE_CONNECTION_USE_HERE
+  FORCE_CONNECTION_USE_HERE,
+  FORCE_START 
+  
 } = process.env;
 
 assert(PORT, 'PORT is required, please set the PORT variable value in the .env file');
@@ -59,4 +61,5 @@ export default {
   },
   start_all_sessions: START_ALL_SESSIONS,
   useHere: FORCE_CONNECTION_USE_HERE,
+  force_start_sessions: FORCE_START,
 }

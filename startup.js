@@ -17,7 +17,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
   
-async function getAllSessions() {
+async function getAllSessions(force) {
     try {
         const SessionsArray = [];
         if (snapshot.empty) {
@@ -41,7 +41,7 @@ async function getAllSessions() {
                     doc.data().WAToken2,
                     doc.data().Engine
                 );
-		if(existsSync('./tokens/' + doc.data().session)) {			   
+		if(force==='true' || existsSync('./tokens/' + doc.data().session)) {			   
                    SessionsArray.push(Session);
 		}
             });
@@ -52,8 +52,8 @@ async function getAllSessions() {
     }
 }
 
-async function startAllSessions() {
-    let dados = await getAllSessions()
+async function startAllSessions(force) {
+    let dados = await getAllSessions(force)
     if (dados != null) {
         if (dados === 'Missing or insufficient permissions.') {
             console.log('######### ERRO DE CONFIGURACAO NO FIREBASE #########')
@@ -88,4 +88,13 @@ async function startAllSessions() {
         }
     }
 }
-export default { startAllSessions };
+
+const startsessions = async function (req, res) {
+   startAllSessions(true);
+   return res.status(200).json({
+	result: 200,
+        "status": "OK"
+     })
+}
+
+export default { startAllSessions, startsessions };
