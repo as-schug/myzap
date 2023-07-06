@@ -11,6 +11,8 @@ SESSION="$1"
 if [ -z "$SESSION" ]
 then
   SESSION='test'
+else
+  SESSION=$(basename "$SESSION")
 fi
 
 CMD="$2"
