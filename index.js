@@ -38,6 +38,11 @@ const io = new Server(server, {
   allowEIO3: true
 });
 
+var date = new Date();
+var unixTimestamp = Math.floor(date.getTime() / 1000);
+
+await console.log('D/H: ' + unixTimestamp);
+
 app.use(cors());
 app.use(express.json({
   limit: '50mb'

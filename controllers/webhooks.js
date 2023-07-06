@@ -45,13 +45,22 @@ export default class Webhooks {
 	if(data.wipe && response=='inChat') {
 	   await data.client.logout();
 	}
-	if(data.wipe) {
-	   await rm('./tokens/' + session, { recursive: true, force: true });
-	   console.log(response + ': Apagando diretorio ' + './tokens/' + session)
-	}
+	try {	
+ 	   if(data.wipe) {
+	     await rm('./tokens/' + session, { recursive: true, force: true });
+	     console.log(response + ': Apagando diretorio ' + './tokens/' + session)
+	   }
+        } catch (error) {
+            console.log(error)
+        }
+	
         if (response == 'autocloseCalled' || response == 'browserClose' ){
             if (response == 'autocloseCalled'){
-    	       await database.deleteSession2(session)	    
+	      try{
+    	         await database.deleteSession2(session)
+	      }catch(error) {
+	         console.log(error)
+	      }
             }
 	    await Sessions.deleteSession(session)
         }

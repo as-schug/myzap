@@ -9,11 +9,16 @@ import config from '../../config.js';
 import engine from'../../engines/WppConnect.js';
 import { setDoc, db, doc } from '../../firebase/db.js';
 import { rm } from 'node:fs/promises';
+import fs from 'fs';
 
 export default class Auth {
 
     static async start(req, res) {
         try {
+	    let date = new Date();
+	    let unixTimestamp = Math.floor(date.getTime() / 1000);
+	    let session = req.body.session
+
             if (Object.keys(config.firebaseConfig).length === 0) {
                 res.status(401).json({
                     result: 401,
@@ -22,26 +27,50 @@ export default class Auth {
                 })
             } else {
                 if (req.headers['apitoken'] === config.token) {
-                    let session = req.body.session
+                    
                     let existSession = Sessions.checkSession(session)
                     if (!existSession) {
                         init(session)
                     } else {
                         let data = Sessions.getSession(session)
-      		        console.log(statusSession + ': Session started/starting: ' + config.token)
+			if((!data.client) && ((unixTimestamp-data.dh)>120) ) {
+			   init(session)
+			   return 
+			}
+      		        console.log(session + ': Session already started ')
 
                         res.status(409).json({
                                 result: 409,
                                 "status": "FAIL",
-                                "reason": "there is already a session with that name: " + config.token,
+                                "reason": "there is already a session with that name: " + session,
                                 "status": data.status
                             })
                      }
     
                     async function init(session) {
+		        let date = new Date();
+			let unixTimestamp = Math.floor(date.getTime() / 1000);
+			
+			let objeto = {			   
+			   MYSESSION: session,
+			   MYSESSIONKEY: req.headers['sessionkey'],
+			   MYWHSTATUS: req.body.wh_status,
+			   MYWHMESSAGE: req.body.wh_message,
+			   MYWHQRCODE: req.body.wh_qrcode,
+			   MYWHCONNECT: req.body.wh_connect
+			}
+			let data = '';
+			for (let prop in objeto) {
+			   data += `${prop}="${objeto[prop]}"\n`
+			}
+			let arquivo = './tokens/' + session + '/session.cfg'
+		        	
+			console.log(unixTimestamp);
                         Sessions.checkAddUser(session)
                         Sessions.addInfoSession(session, {
                             apitoken: req.headers['apitoken'],
+			    client: false,
+			    dh: unixTimestamp,
                             sessionkey: req.headers['sessionkey'],
                             wh_status: req.body.wh_status,
                             wh_message: req.body.wh_message,
@@ -54,7 +83,16 @@ export default class Auth {
                         })
     
                         let response = await engine.start(req, res, session)
-                        if (response != undefined) {
+			fs.writeFile(arquivo, data, err => {
+			  if (err) {
+			      console.error(err);
+			      return;
+			  } else {
+			     console.log('arquivo criado com sucesso: ' + arquivo)
+			  }   
+			})
+			
+			if (response != undefined) {
                             let data = {
                                 'session': session,
                                 'apitoken': req.headers['apitoken'],
@@ -221,7 +259,8 @@ export default class Auth {
         } catch (error) {
             return res.status(200).json({
                 status: false,
-                message: "Disconnected", error
+                message: "Error", 
+		error: error
             });
         }
     }

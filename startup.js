@@ -89,12 +89,17 @@ async function startAllSessions(force) {
     }
 }
 
-const startsessions = async function (req, res) {
+const startallsessionsEx = async function (req, res) {
+   console.log('starting all sessions')
+   
    startAllSessions(true);
+   
    return res.status(200).json({
 	result: 200,
         "status": "OK"
      })
 }
 
-export default { startAllSessions, startsessions };
+export default { startAllSessions,  startallsessionsEx };
+
+export { startallsessionsEx }
