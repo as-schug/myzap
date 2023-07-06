@@ -45,7 +45,7 @@ echo "Using TOKEN: $TOKEN"
 curl -X POST -H 'Content-Type: application/json' \
                   -m 60 \
                   -H "sessionkey: $APITOKEN" \
-                  -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHSTATUS\"}" \
+                  -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\"}" \
 		  $HOST/$CMD
 								
 
