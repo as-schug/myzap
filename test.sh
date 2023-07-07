@@ -2,7 +2,6 @@
  
 # curl -X POST -H "Content-Type: application/json" -d '{"a":10}' "http://127.0.0.1:3333/webhook?session=xx&event=teste"
 
-
 if [ -f ".env" ]
 then
   . ./.env
@@ -13,7 +12,30 @@ then
    . myzap/.env
 fi
 
-SESSION="$1"
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h | --host )
+      host="$2"
+      shift 2
+      ;;
+    -s | --session )
+      SESSION="$2"
+      shift 2 
+      ;;
+    -c | --cmd | --command )
+      CMD="$2"
+      shift 2
+      ;;      
+    * )
+    echo "Invalid argument [$2]"SESSION="$1"
+    exit 1
+    ;;
+  esac
+done
+
+
+#exit
+#SESSION="$1"
 
 if [ -z "$SESSION" ]
 then
@@ -22,31 +44,47 @@ else
   SESSION=$(basename "$SESSION")
 fi
 
-CMD="$2"
+#CMD="$2"
 if [ -z "$CMD" ]
 then
    CMD=start
 fi   
 
+#host="$3"
+if [ -z "$host" ]
+then
+  host="$HOST"
+fi
+
+
 ARQ="./tokens/$SESSION/session.cfg" 
 if [ -f $ARQ ]
 then
   . $ARQ
+else 
+  ARQ="../tokens/$SESSION/session.cfg" 
+  if [ -f $ARQ ]
+  then
+    . $ARQ
+  fi 
 fi  
 
-APITOKEN=$MYSESSIONKEY
-if [ -z "$MYSESSIONKEY" ]
+if [ -z "$APITOKEN" ]
 then
-  APITOKEN=$(echo -n "$SESSION" "$SHAKEY"|sha512sum|sha256sum|base32 -w 0)
-fi
+  APITOKEN=$MYSESSIONKEY
+  if [ -z "$APITOKEN" ]
+  then
+    APITOKEN=$(echo -n "$SESSION" "$SHAKEY"|sha512sum|sha256sum|base32 -w 0)
+  fi
+fi  
 
 echo "Using TOKEN: $TOKEN"
 
 curl -X POST -H 'Content-Type: application/json' \
-                  -m 60 \
+                  -k -m 60 \
                   -H "sessionkey: $APITOKEN" \
                   -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\"}" \
-		  $HOST/$CMD
+		  $host/$CMD
 								
 
 ls -l tokens/
