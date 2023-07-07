@@ -31,7 +31,7 @@ const checkParams = async (req, res, next) => {
 	    dh: data.dh,
 	    status: status,
 	    exists: exists,	    
-            message: session + ( exists ? ': O Serviço para a sessao esta offLine.' : ': A sessão não existe.' ) 
+            message: session + ( exists ? ': O Serviço para a sessao esta offline.' : ': A sessão não existe.' ) 
         })
     }
     else if (data.sessionkey != req.headers['sessionkey']) {
