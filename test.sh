@@ -14,6 +14,10 @@ fi
 
 while [ $# -gt 0 ]; do
   case "$1" in
+    -a | --apitoken )
+      APITOKEN="$2"
+      shift 2
+      ;;
     -h | --host )
       host="$2"
       shift 2

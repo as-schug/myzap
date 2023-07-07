@@ -6,26 +6,41 @@
  */
 import Sessions from '../controllers/sessions.js'
 import dotenv from "dotenv";
+import { existsSync } from 'node:fs';
+
 dotenv.config();
 let engine = process?.env?.ENGINE;
 
 const checkParams = async (req, res, next) => {
     let session = req?.body?.session
     let data = Sessions.getSession(session)
+    let status = data ? data.status : "";
+    let exists = existsSync('./tokens/' + session)
     if (!session) {
-        return res.status(401).json({ error: 'Sessão não informada.' });
+        return res.status(401).json({
+	  response: false,
+	  result: 401,
+          status: status,
+	  exists: exists,
+	  message: 'Sessão não informada.' });
     }
-    else if (Sessions.session.length === 0) {
+    else if (Sessions.session.length === 0 || !data || !data.client) {
         return res.status(503).json({
-            response: false,
-            status: "Service Unavailable",
-            message: 'O Serviço esta OffLine, indisponivel.'
+	    response:false,
+	    result: 503,
+	    dh: data.dh,
+	    status: status,
+	    exists: exists,	    
+            message: session + ': O Serviço para a sessao esta offLine.'
         })
     }
     else if (data.sessionkey != req.headers['sessionkey']) {
         return res.status(401).json({
-            "result": 401,
-            "messages": "Não autorizado, verifique se o nome da sessão e o sessionkey estão corretos"
+	    response: false,
+            result: 401,
+	    status: status,
+	    exists: exists,	     
+            message: session+": Não autorizado. Verifique se o nome da sessão e o sessionkey estão corretos"
         })
     }
     else {
@@ -34,8 +49,10 @@ const checkParams = async (req, res, next) => {
             if (!data.client) {
                 return res.status(400).json({
                     response: false,
-                    status: "Disconnected",
-                    message: 'A sessão do WhatsApp informada não está ativa.'
+		    result: 401,
+		    status: status,
+                    exists: exists,
+		    message: session+': A sessão informada não está ativa.'
                 })
             }
             else {
@@ -47,8 +64,10 @@ const checkParams = async (req, res, next) => {
             if (!client) {
                 return res.status(400).json({
                     response: false,
-                    status: "Disconnected",
-                    message: 'A sessão do WhatsApp informada não está ativa.'
+                    result: 401,
+		    status: status,
+		    exists: exists,
+		    message: session+': A sessão informada não está ativa.'
                 })
             }
             else {

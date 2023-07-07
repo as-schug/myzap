@@ -17,7 +17,7 @@ export default class Auth {
         try {
 	    let date = new Date();
 	    let unixTimestamp = Math.floor(date.getTime() / 1000);
-	    let session = req.body.session
+	    let session = req.body.session    
 
             if (Object.keys(config.firebaseConfig).length === 0) {
                 res.status(401).json({
@@ -211,21 +211,33 @@ export default class Auth {
     }
 
     static async getSessionState(req, res) {
-        let data = Sessions.getSession(req.body.session)
+        let session = req.body.session
+	let data = Sessions.getSession(session)
         try {
+	    let exists = fs.existsSync('./tokens/' + session)
             const client = data.client
             if (client == null || data.status == null)
                 return res.status(200).json({
+		    response: false,
                     status: 'CLOSED',
+		    exists: exists,
+		    dh: data.dh,
                     qrcode: null
                 });
-            return res.status(200).json({
+            return res.status(200).json({	        
+	        response: data.status === 'inChat'?true:false,
+		result: 200,
+		exists: exists,
+		dh: data.dh,
                 status: data.status
             });
         } catch (ex) {
             return res.status(400).json({
                 response: false,
-                message: "A sessão não está ativa."
+		status: 'unknown',
+		exists: exists,
+		dh: data.dh,
+                message: 'Exception' + ex
             });
         }
     }
