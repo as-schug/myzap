@@ -1,4 +1,5 @@
-FROM debian:11 
+FROM debian:bullseye-slim
+#FROM debian:11 
 WORKDIR /usr/src/app
 RUN apt-get update && apt-get install -y \
     gconf-service \
