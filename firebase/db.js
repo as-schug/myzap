@@ -30,10 +30,10 @@ if(config.apikey === undefined ){
 
 }else{
   xapp = initializeApp(config.firebaseConfig);
-  xdb = getFirestore(app);
+  xdb = getFirestore(xapp);
 
-  xSessions = await collection(db,config.sessions_field);
-  xsnapshot = await getDocs(Sessions);
+  xSessions = await collection(xdb,config.sessions_field);
+  xsnapshot = await getDocs(xSessions);
 
 }
 
