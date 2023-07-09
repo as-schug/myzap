@@ -47,9 +47,7 @@ export default class Auth {
                             })
                      }
     
-                    async function init(session) {
-		        let date = new Date();
-			let unixTimestamp = Math.floor(date.getTime() / 1000);
+                    async function init(session) {		        
 			
 			let objeto = {			   
 			   MYSESSION: session,
@@ -65,7 +63,7 @@ export default class Auth {
 			}
 			let arquivo = './tokens/' + session + '/session.cfg'
 		        	
-			console.log(unixTimestamp);
+			console.log('DH: ' + unixTimestamp);
                         Sessions.checkAddUser(session)
                         Sessions.addInfoSession(session, {
                             apitoken: req.headers['apitoken'],
