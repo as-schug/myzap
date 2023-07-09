@@ -51,7 +51,7 @@ fi
 #CMD="$2"
 if [ -z "$CMD" ]
 then
-   CMD=start
+   CMD=SessionState
 fi   
 
 #host="$3"
