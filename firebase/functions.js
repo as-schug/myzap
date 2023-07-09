@@ -17,6 +17,9 @@ export default class Firebase {
 
     static async addSession(req, res, next) {
         try {
+	   if(config.apikey === undefined ) {
+	      return res.status(404).send('No APIKEY defined for firebase');
+	   }
             const data = req.body;
             await addDoc(Sessions, data);
             res.send('Record saved successfuly');
@@ -27,6 +30,9 @@ export default class Firebase {
 
     static async getAllSessions(req, res, next) {
         try {
+	   if(config.apikey === undefined ) {
+	      return res.status(404).send('No APIKEY defined for firebase');
+	   }
             const SessionsArray = [];
             if (snapshot.empty) {
                 res.status(404).send('No Session record found');
@@ -55,6 +61,9 @@ export default class Firebase {
 
     static async getAllSessionsFulldata(req, res, next) {
         try {
+	   if(config.apikey === undefined ) {
+	      return res.status(404).send('No APIKEY defined for firebase');
+	   }
             const SessionsArray = [];
             if (snapshot.empty) {
                 res.status(404).send('No Session record found');
@@ -85,6 +94,9 @@ export default class Firebase {
 
     static async getSession(req, res, next) {
         try {
+	   if(config.apikey === undefined ) {
+	      return res.status(404).send('No APIKEY defined for firebase');
+	   }
             const id = req.body.id;
             const data = await getDoc(doc(db, config.sessions_field, id));
             if (!data.exists()) {
@@ -99,6 +111,9 @@ export default class Firebase {
 
     static async updateSession(req, res, next) {
         try {
+	   if(config.apikey === undefined ) {
+	      return res.status(404).send('No APIKEY defined for firebase');
+	   }
             const id = req.body.id;
             const data = req.body;
             await setDoc(doc(db, config.sessions_field, id), data);
@@ -110,6 +125,9 @@ export default class Firebase {
 
     static async deleteSession(req, res, next) {
         try {
+	   if(config.apikey === undefined ) {
+	      return res.status(404).send('No APIKEY defined for firebase');
+	   }
             const id = req.body.session;
             if (!id) {
                 res.status(400).json({
@@ -139,6 +157,9 @@ export default class Firebase {
     }
     static async deleteSession2(session) {
         try {
+	   if(config.apikey === undefined ) {
+	      return false
+	   }
             const data = await getDoc(doc(db, config.sessions_field, session));     
             if (data.exists()) {
 	        console.log('Deleting database session ' + session)

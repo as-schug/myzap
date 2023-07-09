@@ -51,6 +51,7 @@ export default {
   engine: ENGINE,
   ssl_key_path: SSL_KEY_PATH,
   ssl_cert_path: SSL_CERT_PATH,
+  apikey: API_KEY,
   firebaseConfig: {
     apiKey: API_KEY,
     authDomain: AUTH_DOMAIN,

@@ -147,20 +147,25 @@ export default class Wppconnect {
     static async getToken(session) {
         return new Promise(async (resolve, reject) => {
             try {
-                const Session = doc(db, config.sessions_field, session);
-                const dados = await getDoc(Session);
-                if (dados.exists() && dados.data()?.Engine === process.env.ENGINE) {
-                    let data = {
-                        'WABrowserId': dados.data().WABrowserId,
-                        'WASecretBundle': dados.data().WASecretBundle,
-                        'WAToken1': dados.data().WAToken1,
-                        'WAToken2': dados.data().WAToken2,
-                        'Engine': process.env.ENGINE
-                    }
-                    resolve(data)
-                } else {
+	    
+	        if(config.apikey === undefined ){
+		  resolve('no results found')			   
+		} else {	    
+                  const Session = doc(db, config.sessions_field, session);
+                  const dados = await getDoc(Session);
+                  if (dados.exists() && dados.data()?.Engine === process.env.ENGINE) {
+                      let data = {
+                          'WABrowserId': dados.data().WABrowserId,
+                          'WASecretBundle': dados.data().WASecretBundle,
+                          'WAToken1': dados.data().WAToken1,
+                          'WAToken2': dados.data().WAToken2,
+                          'Engine': process.env.ENGINE
+                      }
+                      resolve(data)
+                  } else {
                     resolve('no results found')
-                }
+                  }
+		}  
 
             } catch (error) {
                 reject(error)

@@ -81,14 +81,17 @@ export default class Auth {
                         })
     
                         let response = await engine.start(req, res, session)
-			fs.writeFile(arquivo, data, err => {
-			  if (err) {
+			
+			if (fs.existsSync('./tokens/'+session)) {
+			  await fs.writeFile(arquivo, data, err => {
+			    if (err) {
 			      console.error(err);
 			      return;
-			  } else {
-			     console.log('arquivo criado com sucesso: ' + arquivo)
-			  }   
-			})
+			    } else {
+			       console.log('arquivo criado com sucesso: ' + arquivo)
+			    }   
+			  })
+			}  
 			
 			if (response != undefined) {
                             let data = {
@@ -105,13 +108,25 @@ export default class Auth {
                                 'WAToken2': response.WAToken2,
                                 'Engine': process.env.ENGINE
                             }
-    
-                            await setDoc(doc(db, config.sessions_field, session), data);
-    
+			     if(config.apikey === undefined ) {
+			       let datajs = JSON.stringify(data,null,2)
+			       arquivo = './tokens/' + session + '/session.js'
+			       fs.writeFile(arquivo, datajs, (err) => {
+			         if (err) {
+			          console.error(err);
+				}else {
+			          console.log('arquivo criado com sucesso: ' + arquivo)
+				}
+			      });
+			    } else {
+			      arquivo = 'firebase' 
+                              await setDoc(doc(db, config.sessions_field, session), data);
+			    } 
+			     
                             res.status(200).json({
                                 "result": 200,
                                 "status": "CONNECTED",
-                                "response": `Sessão ${session} gravada com sucesso no Firebase`
+                                "response": `Sessão ${session} gravada com sucesso em ${arquivo}`
                             })
     
                         }

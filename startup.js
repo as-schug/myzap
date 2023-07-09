@@ -12,6 +12,8 @@ import { snapshot} from './firebase/db.js';
 import request from "request-promise";
 import config from "./config.js";
 import { existsSync } from 'node:fs';
+import fs from 'fs';
+import path from 'path'
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -20,9 +22,38 @@ function sleep(ms) {
 async function getAllSessions(force) {
     try {
         const SessionsArray = [];
-        if (snapshot.empty) {
+	if(config.apikey === undefined ) {
+	 console.log('Lendo dos dados locais...')
+	 let directoryPath='./tokens';
+	 let files=fs.readdirSync(directoryPath)
+	 console.log(files)
+	 for(const file of files) {
+	   //console.log('Processando diretorio: ' + file);
+	      let stats = fs.statSync(path.join(directoryPath, file))
+	      if (stats.isDirectory()) {
+		  console.log('Processando diretorio ' + file)
+		  let arquivo = directoryPath + '/' + file + '/session.js';
+		  if(existsSync(arquivo)){
+		    console.log('Arquivo existe: ' + arquivo)
+		    
+		    let data=fs.readFileSync(arquivo, 'utf8')
+		    try {
+		      const objeto = JSON.parse(data);
+		      console.log(objeto);
+		      SessionsArray.push(objeto)
+		      console.log(SessionsArray)
+		    } catch (err) {
+		      console.error('Erro ao analisar o JSON', err);  
+		    }
+		  }		
+	       }
+	  }  	  
+	      
+
+	} else {
+	  if (snapshot.empty) {
             return null;
-        } else {
+	  } else {
 	    console.log(`Reading ${config.sessions_field} from database`)
 	    
             snapshot.forEach(doc => {
@@ -45,8 +76,12 @@ async function getAllSessions(force) {
                    SessionsArray.push(Session);
 		}
             });
-            return (SessionsArray);
-        }
+	 }
+	}
+	await console.log('Retornando ' + SessionsArray)
+
+        return (SessionsArray);        
+
     } catch (error) {
         return (error.message);
     }
@@ -54,6 +89,8 @@ async function getAllSessions(force) {
 
 async function startAllSessions(force) {
     let dados = await getAllSessions(force)
+    console.log('Dados: ' + dados)
+//    return
     if (dados != null) {
         if (dados === 'Missing or insufficient permissions.') {
             console.log('######### ERRO DE CONFIGURACAO NO FIREBASE #########')
@@ -61,6 +98,7 @@ async function startAllSessions(force) {
             console.log('### Verifique as permissões de escrita e leitura ###')
         } else {
 	    for(const item of dados){
+	        console.log('Iniciando sessão: ' + item)
                 var options = {
                     'method': 'POST',
                     'json': true,

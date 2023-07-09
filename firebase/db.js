@@ -20,18 +20,35 @@ import { deleteDoc,
     addDoc 
 } from 'firebase/firestore/lite';
 
-const app = initializeApp(config.firebaseConfig);
-const db = getFirestore(app);
+let xapp = null
+let xdb = null
+let xSessions = null
+let xsnapshot = null
 
-const Sessions = await collection(db,config.sessions_field);
-const snapshot = await getDocs(Sessions);
 
-export {snapshot};
+if(config.apikey === undefined ){
+
+}else{
+  xapp = initializeApp(config.firebaseConfig);
+  xdb = getFirestore(app);
+
+  xSessions = await collection(db,config.sessions_field);
+  xsnapshot = await getDocs(Sessions);
+
+}
+
+const Sessions = xsnapshot
+const snapshot = xsnapshot
+const app = xapp
+const db = xdb
+
 export {addDoc};
 export {setDoc};
 export {getDoc};
 export {doc};
-export {db};
 export {deleteDoc};
+export {db};
+export {snapshot};
 export {Sessions};
 export default{ app };
+
