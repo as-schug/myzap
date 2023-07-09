@@ -83,14 +83,8 @@ export default class Auth {
                         let response = await engine.start(req, res, session)
 			
 			if (fs.existsSync('./tokens/'+session)) {
-			  await fs.writeFile(arquivo, data, err => {
-			    if (err) {
-			      console.error(err);
-			      return;
-			    } else {
-			       console.log('arquivo criado com sucesso: ' + arquivo)
-			    }   
-			  })
+			  fs.writeFileSync(arquivo, data)
+			  console.log('arquivo cfg criado com sucesso: ' + arquivo)
 			}  
 			
 			if (response != undefined) {
@@ -111,13 +105,8 @@ export default class Auth {
 			     if(config.apikey === undefined ) {
 			       let datajs = JSON.stringify(data,null,2)
 			       arquivo = './tokens/' + session + '/session.js'
-			       fs.writeFile(arquivo, datajs, (err) => {
-			         if (err) {
-			          console.error(err);
-				}else {
-			          console.log('arquivo criado com sucesso: ' + arquivo)
-				}
-			      });
+			       fs.writeFileSync(arquivo, datajs)
+			       await console.log('arquivo js criado com sucesso: ' + arquivo)			
 			    } else {
 			      arquivo = 'firebase' 
                               await setDoc(doc(db, config.sessions_field, session), data);
