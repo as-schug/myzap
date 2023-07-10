@@ -223,6 +223,7 @@ export default class Auth {
 		    response: false,
                     status: 'CLOSED',
 		    exists: exists,
+		    number: '',
 		    dh: data.dh,
                     qrcode: null
                 });
@@ -231,6 +232,7 @@ export default class Auth {
 		result: 200,
 		exists: exists,
 		dh: data.dh,
+		number: data.number,
                 status: data.status
             });
         } catch (ex) {
@@ -239,6 +241,7 @@ export default class Auth {
 		status: 'unknown',
 		exists: exists,
 		dh: data.dh,
+		number: data.number,
                 message: 'Exception' + ex
             });
         }

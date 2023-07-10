@@ -39,6 +39,10 @@ export default class Webhooks {
 
     static async wh_connect(session, response, number = null, browserless = null, tokens = []) {
         let data = Sessions.getSession(session)
+	
+	if ((data !== null) && (number !== null)){
+	  data.number = number
+	}
 	if(response=='notLogged' && data.wipe) {
 	   await data.client.close();  
 	}
