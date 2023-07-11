@@ -1,7 +1,5 @@
  #! /bin/sh
  
-# curl -X POST -H "Content-Type: application/json" -d '{"a":10}' "http://127.0.0.1:3333/webhook?session=xx&event=teste"
-
 if [ -f ".env" ]
 then
   . ./.env
@@ -14,8 +12,8 @@ fi
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    -a | --apitoken )
-      APITOKEN="$2"
+    -k | --sessionkey )
+      SESSIONKEY="$2"
       shift 2
       ;;
     -h | --host )
@@ -37,10 +35,6 @@ while [ $# -gt 0 ]; do
   esac
 done
 
-
-#exit
-#SESSION="$1"
-
 if [ -z "$SESSION" ]
 then
   SESSION='test'
@@ -48,50 +42,47 @@ else
   SESSION=$(basename "$SESSION")
 fi
 
-#CMD="$2"
 if [ -z "$CMD" ]
 then
    CMD=SessionState
 fi   
 
-#host="$3"
 if [ -z "$host" ]
 then
   host="$HOST"
 fi
 
-
-ARQ="./tokens/$SESSION/session.cfg" 
+ARQ="./tokens/$SESSION/session.js"
 if [ -f $ARQ ]
 then
-  . $ARQ
-else 
-  ARQ="../tokens/$SESSION/session.cfg" 
-  if [ -f $ARQ ]
+  if [ -z "$SESSIONKEY" ]
   then
-    . $ARQ
-  fi 
-fi  
-
-if [ -z "$APITOKEN" ]
-then
-  APITOKEN=$MYSESSIONKEY
-  if [ -z "$APITOKEN" ]
-  then
-    APITOKEN=$(echo -n "$SESSION" "$SHAKEY"|sha512sum|sha256sum|base32 -w 0)
+    SESSIONKEY=$(cat $ARQ| jq -r .sessionkey)
   fi
+  MYWHSTATUS=$(cat $ARQ| jq -r .wh_status)
+  MYWHMESSAGE=$(cat $ARQ| jq -r .wh_message)
+  MYWHQRCODE=$(cat $ARQ| jq -r .wh_qrcode)
+  MYWHCONNECT=$(cat $ARQ| jq -r .wh_connect) 
+  if [ -z "$TOKEN" ]
+  then
+    TOKEN=$(cat $ARQ| jq -r .apitoken)    
+  fi
+fi
+
+if [ -z "$SESSIONKEY" ]
+then
+  SESSIONKEY=$(echo -n "$SESSION" "$SHAKEY"|sha512sum|sha256sum|base32 -w 0)
 fi  
 
-echo "Using TOKEN: $TOKEN"
+echo "Using TOKEN: $TOKEN" 
+echo "Usign Session Key: [$SESSIONKEY]"
 
 curl -X POST -H 'Content-Type: application/json' \
                   -k -m 60 \
-                  -H "sessionkey: $APITOKEN" \
+                  -H "sessionkey: $SESSIONKEY" \
                   -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\"}" \
 		  $host/$CMD
 								
 
 ls -l tokens/
-									
-									
-									
+

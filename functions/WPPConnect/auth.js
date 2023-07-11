@@ -82,11 +82,6 @@ export default class Auth {
     
                         let response = await engine.start(req, res, session)
 			
-			if (fs.existsSync('./tokens/'+session)) {
-			  fs.writeFileSync(arquivo, data)
-			  console.log('arquivo cfg criado com sucesso: ' + arquivo)
-			}  
-			
 			if (response != undefined) {
                             let data = {
                                 'session': session,
