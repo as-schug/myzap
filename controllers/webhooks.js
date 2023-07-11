@@ -10,7 +10,7 @@ import 'superagent-queue';
 import database from '../firebase/functions.js';
 import dotenv from 'dotenv'
 import { rm } from 'node:fs/promises';
-
+import { testHas } from '../config.js'
 dotenv.config();
 //require('superagent-queue');
 //require('dotenv').config();
@@ -20,7 +20,7 @@ export default class Webhooks {
     static async wh_messages(session, response) {
         let data = Sessions.getSession(session)
         try {
-            if (data.wh_message !== '') {
+            if (!testHas( data.wh_message ) ) {
                 await superagent
                     .post(data.wh_message)
                     .send(response)
@@ -88,7 +88,7 @@ export default class Webhooks {
                     'status': response
                 }
             }
-            if (data.wh_connect !== '') {
+            if (!testHas(data.wh_connect)) {
                 await superagent
                     .post(data.wh_connect)
                     .send(object)
@@ -109,7 +109,7 @@ export default class Webhooks {
     static async wh_status(session, response) {
         let data = Sessions.getSession(session)
         try {
-            if (data.wh_status !== '') {
+            if (!testHas(data.wh_status)) {
                 await superagent
                     .post(data.wh_status)
                     .send(response)
@@ -134,7 +134,7 @@ export default class Webhooks {
                 'session': session,
                 'qrcode': response
             }
-            if (data.wh_qrcode !== '') {
+            if (!testHas(data.wh_qrcode)) {
                 await superagent
                     .post(data.wh_qrcode)
                     .send(object)

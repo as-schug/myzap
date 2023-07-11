@@ -41,6 +41,20 @@ assert(TOKEN, 'TOKEN is required, please set the ENGINE variable value in the .e
 assert(ENGINE, 'ENGINE is required, please set the ENGINE variable value in the .env file');
 assert(SESSIONS_FIELD, 'SESSIONS_FIELD is required, please set the SESSIONS_FIELD variable value in the .env file');
 
+
+let mySet = new Set();
+
+mySet.add(null)
+mySet.add(undefined)
+mySet.add('')
+mySet.add(false)
+mySet.add(0)
+
+function testHas(value) {
+   return mySet.has(value)
+}
+
+export { testHas }
 export default {
   port: PORT,
   host: HOST,
