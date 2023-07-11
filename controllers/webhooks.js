@@ -20,7 +20,7 @@ export default class Webhooks {
     static async wh_messages(session, response) {
         let data = Sessions.getSession(session)
         try {
-            if (data.wh_message != undefined) {
+            if (data.wh_message !== '') {
                 await superagent
                     .post(data.wh_message)
                     .send(response)
@@ -28,9 +28,9 @@ export default class Webhooks {
                     .end(function () {
                         console.log('webhooks wh_messages message....')
                     });
-                if (data.wh_message == '') {
-                    console.log('Webhook wh_messages not defined')
-                }
+	    } else {
+	      console.log('Webhook wh_messages not defined')
+
             }
         } catch (error) {
             console.log(error)
@@ -88,7 +88,7 @@ export default class Webhooks {
                     'status': response
                 }
             }
-            if (data.wh_connect != undefined) {
+            if (data.wh_connect !== '') {
                 await superagent
                     .post(data.wh_connect)
                     .send(object)
@@ -96,9 +96,8 @@ export default class Webhooks {
                     .end(function () {
                         console.log('webhooks wh_messages status....')
                     });
-                if (data.wh_connect == '') {
-                    console.log('Webhook wh_connect not defined')
-                }
+	    } else {
+	      console.log('Webhook wh_connect not defined')
             }
 
         } catch (error) {
@@ -110,7 +109,7 @@ export default class Webhooks {
     static async wh_status(session, response) {
         let data = Sessions.getSession(session)
         try {
-            if (data.wh_status != undefined) {
+            if (data.wh_status !== '') {
                 await superagent
                     .post(data.wh_status)
                     .send(response)
@@ -118,11 +117,9 @@ export default class Webhooks {
                     .end(function () {
                         console.log('webhooks wh_status message....')
                     });
-                if (data.wh_status == '') {
-                    console.log('Webhook wh_status not defined')
-                }
-            }
-
+	    } else {
+	      console.log('Webhook wh_status not defined')
+	    }
         } catch (error) {
             console.log(error)
         }
@@ -137,7 +134,7 @@ export default class Webhooks {
                 'session': session,
                 'qrcode': response
             }
-            if (data.wh_qrcode != undefined) {
+            if (data.wh_qrcode !== '') {
                 await superagent
                     .post(data.wh_qrcode)
                     .send(object)
@@ -145,11 +142,9 @@ export default class Webhooks {
                     .end(function () {
                         console.log('webhooks wh_qrcode message....')
                     });
-                if (data.wh_qrcode == '') {
-                    console.log('Webhook wh_qrcode not defined')
-                }
-            }
-
+	     } else {
+	       console.log('Webhook wh_qrcode not defined')
+	     }
         } catch (error) {
             console.log(error)
         }
