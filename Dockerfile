@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y \
     libgbm-dev \
     git \
     jed \
+    jq \
     procps
 
 RUN apt-get install curl -y \
@@ -58,6 +59,6 @@ RUN apt-get update && apt-get -y install google-chrome-stable
 
 COPY package*.json ./
 RUN npm install -g npm@latest 
-RUN npm install -f
+RUN npm install 
 COPY . .
 CMD bash ./faz.sh
