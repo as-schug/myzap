@@ -22,7 +22,7 @@ export default class Auth {
 	    let session = req.body.session    
 	    let timeout = req.body.timeout
 	    if (testHas(timeout)){
-	       timeout=15000
+	       timeout=config.timeout
 	    }
 
             if (Object.keys(config.firebaseConfig).length === 0) {

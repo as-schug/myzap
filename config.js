@@ -31,7 +31,8 @@ const {
   APP_ID,
   START_ALL_SESSIONS,
   FORCE_CONNECTION_USE_HERE,
-  FORCE_START 
+  FORCE_START,
+  TIMEOUT
   
 } = process.env;
 
@@ -77,4 +78,5 @@ export default {
   start_all_sessions: START_ALL_SESSIONS,
   useHere: FORCE_CONNECTION_USE_HERE,
   force_start_sessions: FORCE_START,
+  timeout: (testHas(TIMEOUT)?9999999:+TIMEOUT),
 }
