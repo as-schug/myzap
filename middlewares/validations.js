@@ -9,24 +9,36 @@ import dotenv from "dotenv";
 import { existsSync } from 'node:fs';
 
 dotenv.config();
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+  
 let engine = process?.env?.ENGINE;
+
 async function closeold() {
-        let date = new Date();
-	let unixTimestamp = Math.floor(date.getTime() / 1000);	
-        try {
-	   let s = Sessions.getAll()
-	   s.forEach(element => {
+	while (true) {	
+          try {
+	     console.log('Looking for sessions autoclose');
+	     await sleep(100000)
+	     let date = new Date();
+	     let unixTimestamp = Math.floor(date.getTime() / 1000);	
+  	     let s = Sessions.getAll()
+	     s.forEach(element => {
 //                 console.log(element.session + ' testing: ' + element.autologoff + '  ' +  unixTimestamp)
 		 if ( (element.client != null) && (element.autologoff < unixTimestamp)){
-		   element.autologoff = element.autologoff + element.autologoff 
+		   element.autologoff = element.autologoff + 100
                    element.client.logout()
 		   console.log('Loggin session off: ' + element.session);
 		 }
-	    })
-	 } catch(err) {
-	   console.log(err);	              
+	      })
+	   } catch(err) {
+	     console.log(err);	              
+	   }
 	 }  
 }
+
+closeold();
 
 const checkParams = async (req, res, next) => {
     let session = req?.body?.session
@@ -35,7 +47,7 @@ const checkParams = async (req, res, next) => {
     let status = data ? data.status : "";
     let exists = existsSync('./tokens/' + session)
     
-    closeold();
+    //closeold();
     
     if (!session) {
         return res.status(401).json({
