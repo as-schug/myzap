@@ -10,6 +10,8 @@ then
    . myzap/.env
 fi
 
+TIMEOUT=null
+
 while [ $# -gt 0 ]; do
   case "$1" in
     -k | --sessionkey )
@@ -27,7 +29,19 @@ while [ $# -gt 0 ]; do
     -c | --cmd | --command )
       CMD="$2"
       shift 2
-      ;;      
+      ;;     
+    -n | --number | -p | --phone )
+      NUMBER="$2"
+      shift 2
+      ;;
+    -t | --timeout )
+      TIMEOUT="$2"
+      shift 2
+      ;;
+    -m | --message )
+      TEXT="$2"
+      shift 2
+      ;;
     * )
     echo "Invalid argument [$2]"SESSION="$1"
     exit 1
@@ -80,9 +94,10 @@ echo "Usign Session Key: [$SESSIONKEY]"
 curl -X POST -H 'Content-Type: application/json' \
                   -k -m 60 \
                   -H "sessionkey: $SESSIONKEY" \
-                  -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\"}" \
+                  -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\", \"number\": \"$NUMBER\", \"timeout\":$TIMEOUT}" \
 		  $host/$CMD
 								
+echo "========================="
 
 ls -l tokens/
 

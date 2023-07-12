@@ -10,6 +10,8 @@ import engine from'../../engines/WppConnect.js';
 import { setDoc, db, doc } from '../../firebase/db.js';
 import { rm } from 'node:fs/promises';
 import fs from 'fs';
+import { testHas } from '../../config.js'
+
 
 export default class Auth {
 
@@ -18,6 +20,10 @@ export default class Auth {
 	    let date = new Date();
 	    let unixTimestamp = Math.floor(date.getTime() / 1000);
 	    let session = req.body.session    
+	    let timeout = req.body.timeout
+	    if (testHas(timeout)){
+	       timeout=15000
+	    }
 
             if (Object.keys(config.firebaseConfig).length === 0) {
                 res.status(401).json({
@@ -33,6 +39,7 @@ export default class Auth {
                         init(session)
                     } else {
                         let data = Sessions.getSession(session)
+			
 			if((!data.client) && ((unixTimestamp-data.dh)>120) ) {
 			   init(session)
 			   return 
@@ -69,6 +76,8 @@ export default class Auth {
                             apitoken: req.headers['apitoken'],
 			    client: false,
 			    dh: unixTimestamp,
+			    timeout: timeout,
+			    autologoff: timeout+unixTimestamp,
                             sessionkey: req.headers['sessionkey'],
                             wh_status: req.body.wh_status,
                             wh_message: req.body.wh_message,
@@ -228,6 +237,8 @@ export default class Auth {
 		exists: exists,
 		dh: data.dh,
 		number: data.number,
+		timeout: data.timeout,
+		autologoff: data.autologoff,
                 status: data.status
             });
         } catch (ex) {

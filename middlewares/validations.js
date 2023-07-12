@@ -10,12 +10,32 @@ import { existsSync } from 'node:fs';
 
 dotenv.config();
 let engine = process?.env?.ENGINE;
+async function closeold() {
+        let date = new Date();
+	let unixTimestamp = Math.floor(date.getTime() / 1000);	
+        try {
+	   let s = Sessions.getAll()
+	   s.forEach(element => {
+                 console.log(element.session + ' testing: ' + element.autologoff + '  ' +  unixTimestamp)
+		 if ( (element.client != null) && (element.autologoff < unixTimestamp)){
+                   element.client.logout()
+		   console.log('Loggin session off: ' + element.session);
+		 }
+	    })
+	 } catch(err) {
+	   console.log(err);	              
+	 }  
+}
 
 const checkParams = async (req, res, next) => {
     let session = req?.body?.session
+    let date = new Date();    
     let data = Sessions.getSession(session)
     let status = data ? data.status : "";
     let exists = existsSync('./tokens/' + session)
+    
+    closeold();
+    
     if (!session) {
         return res.status(401).json({
 	  response: false,
@@ -60,6 +80,9 @@ const checkParams = async (req, res, next) => {
             }
         }
         else {
+            let unixTimestamp = Math.floor(date.getTime() / 1000);
+	    data.autologoff = data.timeout + unixTimestamp			
+	    
             const client = await data?.client?.isConnected();
             if (!client) {
                 return res.status(400).json({
