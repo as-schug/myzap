@@ -27,7 +27,7 @@ async function closeold() {
 	     s.forEach(element => {
                  //console.log(element.session + ' testing: ' + element.autologoff + '  ' +  unixTimestamp)
 		 if ( (element.client != null) && (element.autologoff < unixTimestamp)){
-		   element.autologoff = element.autologoff + 100
+		   element.autologoff = unixTimestamp + element.timeout
                    element.client.logout()
 		   console.log('Loggin session off: ' + element.session);
 		 } else {
