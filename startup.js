@@ -70,7 +70,8 @@ async function getAllSessions(force) {
                     doc.data().WASecretBundle,
                     doc.data().WAToken1,
                     doc.data().WAToken2,
-                    doc.data().Engine
+                    doc.data().Engine,
+		    doc.data().timeout,
                 );
 		if(force==='true' || existsSync('./tokens/' + doc.data().session)) {			   
                    SessionsArray.push(Session);
@@ -109,6 +110,7 @@ async function startAllSessions(force) {
                     },
                     body: {
                         "session": item.session,
+			"timeout": item.timeout,
                         "wh_connect": item.wh_connect,
                         "wh_qrcode": item.wh_qrcode,
                         "wh_status": item.wh_status,

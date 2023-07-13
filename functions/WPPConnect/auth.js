@@ -24,6 +24,8 @@ export default class Auth {
 	    if (testHas(timeout)){
 	       timeout=config.timeout
 	    }
+	    
+	    timeout=+timeout
 
             if (Object.keys(config.firebaseConfig).length === 0) {
                 res.status(401).json({
@@ -104,7 +106,8 @@ export default class Auth {
                                 'WASecretBundle': response.WASecretBundle,
                                 'WAToken1': response.WAToken1,
                                 'WAToken2': response.WAToken2,
-                                'Engine': process.env.ENGINE
+                                'Engine': process.env.ENGINE,
+				timeout: timeout,
                             }
 			     if(config.apikey === undefined ) {
 			       let datajs = JSON.stringify(data,null,2)

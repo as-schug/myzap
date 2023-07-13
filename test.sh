@@ -10,7 +10,7 @@ then
    . myzap/.env
 fi
 
-TIMEOUT=null
+#TIMEOUT=null
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -35,7 +35,7 @@ while [ $# -gt 0 ]; do
       shift 2
       ;;
     -t | --timeout )
-      TIMEOUT="$2"
+      _TIMEOUT="$2"
       shift 2
       ;;
     -m | --message )
@@ -81,6 +81,15 @@ then
   then
     TOKEN=$(cat $ARQ| jq -r .apitoken)    
   fi
+  if [ -z "$_TIMEOUT" ]
+  then
+     _TIMEOUT=$(cat $ARQ| jq -r .timeout)
+  fi
+fi
+
+if [ -z "$_TIMEOUT" ]
+then
+  _TIMEOUT=null
 fi
 
 if [ -z "$SESSIONKEY" ]
@@ -90,11 +99,12 @@ fi
 
 echo "Using TOKEN: $TOKEN" 
 echo "Usign Session Key: [$SESSIONKEY]"
+echo "Using timout of $_TIMEOUT secs"
 
 curl -X POST -H 'Content-Type: application/json' \
                   -k -m 60 \
                   -H "sessionkey: $SESSIONKEY" \
-                  -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\", \"number\": \"$NUMBER\", \"timeout\":$TIMEOUT}" \
+                  -H "apitoken: $TOKEN" -d "{\"session\": \"$SESSION\",\"wh_status\":\"$MYWHSTATUS\",\"wh_message\":\"$MYWHMESSAGE\",\"wh_qrcode\":\"$MYWHQRCODE\",\"wh_connect\":\"$MYWHCONNECT\", \"number\": \"$NUMBER\", \"timeout\":$_TIMEOUT}" \
 		  $host/$CMD
 								
 echo "========================="
