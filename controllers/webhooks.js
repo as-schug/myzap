@@ -20,6 +20,7 @@ export default class Webhooks {
     static async wh_messages(session, response) {
         let data = Sessions.getSession(session)
         try {
+	    console.log(session+ ': Data = ' + data )		       
             if (!testHas( data.wh_message ) ) {
                 await superagent
                     .post(data.wh_message)
@@ -34,6 +35,7 @@ export default class Webhooks {
             }
         } catch (error) {
             console.log(error)
+            console.log(session+ ': Data = ' + data )
         }
     }
 
