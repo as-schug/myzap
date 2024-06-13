@@ -11,7 +11,7 @@ find webhook -empty -delete -ctime +10 -print
 while [  true  ]
 do
   echo 'Updating...'
-  npm update
+#  npm update
   echo 'Starting...'
   sleep 10
   chmod 777 tokens
