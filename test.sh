@@ -2,7 +2,7 @@
  
 if [ -f ".env" ]
 then
-  . ./.env
+  . "./.env"
 fi
 
 if [ -f "myzap/.env" ]
@@ -51,6 +51,9 @@ done
 
 if [ -z "$SESSION" ]
 then
+ 
+   ls -l tokens/
+  
   SESSION='test'
 else
   SESSION=$(basename "$SESSION")
@@ -97,6 +100,7 @@ then
   SESSIONKEY=$(echo -n "$SESSION" "$SHAKEY"|sha512sum|sha256sum|base32 -w 0)
 fi  
 
+echo "Session: $SESSION"
 echo "Using TOKEN: $TOKEN" 
 echo "Usign Session Key: [$SESSIONKEY]"
 echo "Using timout of $_TIMEOUT secs"
@@ -109,5 +113,5 @@ curl -X POST -H 'Content-Type: application/json' \
 								
 echo "========================="
 
-ls -l tokens/
+#ls -l tokens/
 
