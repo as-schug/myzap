@@ -26,6 +26,12 @@ async function closeold() {
   	     let s = Sessions.getAll()
 	     s.forEach(element => {
                  //console.log(element.session + ' testing: ' + element.autologoff + '  ' +  unixTimestamp)
+		 if (element.client == null) {
+		    element.autologoff -= 5000
+		 } else if(element.status=='desconnectedMobile'){
+		    element.autologoff -= 5000
+		 }
+	 
 		 if ( (element.client != null) && (element.autologoff < unixTimestamp)){
 		   element.autologoff = unixTimestamp + element.timeout
                    element.client.logout()
