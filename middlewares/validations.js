@@ -37,7 +37,7 @@ async function closeold() {
                    element.client.logout()
 		   console.log('Loggin session off: ' + element.session);
 		 } else {
-		   console.log(element.session + ': close in ' + (
+		   console.log(element.session + '(' + element.status +'): close in ' + (
 		            element.autologoff - unixTimestamp + ' secs'
 		   ))		   
 		 }
