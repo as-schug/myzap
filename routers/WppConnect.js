@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @Author: Eduardo Policarpo
  * @contact: +55 43996611437
  * @Date: 2021-05-10 18:09:49
@@ -29,7 +29,7 @@ Router.post('/startAllSessions', startallsessionsEx)
 Router.post('/wipeData', Auth.wipeData); 
 // Sessões 
 Router.post('/logout', checkParams, Auth.logoutSession);
-Router.post('/close', checkParams, Auth.closeSession);
+Router.post('/close', /*checkParams,*/ Auth.closeSession);
 Router.post('/SessionState', checkParams, Auth.getSessionState);
 Router.post('/SessionConnect', checkParams, Auth.checkConnectionSession);
 Router.post('/deleteSession', database.deleteSession);

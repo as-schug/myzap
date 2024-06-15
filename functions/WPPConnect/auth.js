@@ -175,7 +175,7 @@ export default class Auth {
             await data.client.close();
            } else {
                Sessions.deleteSession(data.session)
-               rm('./tokens/' + element.session, { recursive: true, force: true });
+               rm('./tokens/' + data.session, { recursive: true, force: true });
            }
             res.status(200).json({
                 status: true,
