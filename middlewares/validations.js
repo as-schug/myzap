@@ -38,7 +38,7 @@ async function closeold() {
 
            if((element.client != null) && (element.client !==undefined) &&(element.client!==false)) {
 
-               if(element.status=='desconnectedMobile'){
+               if( (element.status=='desconnectedMobile') || (element.status=='inChat')){
                  element.client.close()
                } else {
                  element.client.logout()

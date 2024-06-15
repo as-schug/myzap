@@ -22,8 +22,11 @@ export default class Wppconnect {
                 session: session,
                 tokenStore: 'memory',
                 catchQR: (base64Qrimg, ascii) => {
-                    let data = Sessions.getSession(session)
-                    data.autologoff -= 6000;
+                    let data = Sessions.getSession(s
+                    ession)
+                    if (data.status=='inChat') {
+                        data.autologoff -= 6000;
+                    }
                     webhooks.wh_qrcode(session, base64Qrimg)
 
                     this.exportQR(req, res, base64Qrimg, session);
