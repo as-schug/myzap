@@ -25,7 +25,9 @@ export default class Wppconnect {
                     webhooks.wh_qrcode(session, base64Qrimg)
                     this.exportQR(req, res, base64Qrimg, session);
                     Sessions.addInfoSession(session, {
-                        qrCode: base64Qrimg,
+                        qrCode: base64Qrimg
+                    })
+                    Sessions.addInfoSession(data.session, {
                         status: desconnectedMobile
                     })
                 },
