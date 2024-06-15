@@ -27,6 +27,9 @@ export default class Wppconnect {
                     Sessions.addInfoSession(session, {
                         qrCode: base64Qrimg
                     })
+                    Sessions.addInfoSession(session, {
+                        status: undefined
+                    })
                 },
                 statusFind: (statusSession, session) => {
                     console.log(statusSession)
@@ -39,13 +42,13 @@ export default class Wppconnect {
                     if (statusSession === 'browserClose' ||
                         statusSession === 'qrReadFail' ||
                         statusSession === 'autocloseCalled' ||
-			statusSession === 'notLogged' || 
+			statusSession === 'notLogged' ||
                         statusSession === 'serverClose') {
-                        req.io.emit('whatsapp-status', false)  
+                        req.io.emit('whatsapp-status', false)
 			if(statusSession === 'autocloseCalled') {
 			   rm('./tokens/' + session, { recursive: true, force: true });
   			   console.log(statusSession + ': Apagando diretorio ' + './tokens/' + session)
-			}   
+			}
                     }
                     if (statusSession === 'isLogged' ||
                         statusSession === 'qrReadSuccess' ||
