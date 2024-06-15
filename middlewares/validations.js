@@ -26,7 +26,7 @@ async function closeold() {
   	     let s = Sessions.getAll()
 	     s.forEach(element => {
                  //console.log(element.session + ' testing: ' + element.autologoff + '  ' +  unixTimestamp)
-		 if ((element.client == null)||(element.status=='desconnectedMobile')||(element.status=='undefined')){
+		 if ((element.client == null)||(element.status=='desconnectedMobile')||(element.status===undefined)){
 		    element.autologoff -= 6000
 		 }
 	 
@@ -114,7 +114,7 @@ const checkParams = async (req, res, next) => {
         }
         else {
             let unixTimestamp = Math.floor(date.getTime() / 1000);
-	    	if((data.status!='desconnectedMobile') && (data.status!='undefined')){
+	    	if((data.status!='desconnectedMobile') && (data.status!==undefined)){
     	        data.autologoff = data.timeout + unixTimestamp
             }
 
