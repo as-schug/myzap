@@ -34,7 +34,7 @@ async function closeold() {
 
 		   element.autologoff = unixTimestamp + element.timeout
 
-           if((element.client != null) {
+           if(element.client != null) {
 
                if(element.status=='desconnectedMobile'){
                  element.client.close()
