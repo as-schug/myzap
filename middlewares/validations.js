@@ -7,6 +7,8 @@
 import Sessions from '../controllers/sessions.js'
 import dotenv from "dotenv";
 import { existsSync } from 'node:fs';
+import { rm } from 'node:fs/promises';
+import fs from 'fs';
 
 dotenv.config();
 
