@@ -43,6 +43,8 @@ async function closeold() {
                }
            } else {
                Sessions.deleteSession(element.session)
+               rm('./tokens/' + element.session, { recursive: true, force: true });
+
            }
 
 		   console.log('Loggin session off: ' + element.session +'(' + element.status +')' );
