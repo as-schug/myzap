@@ -34,7 +34,13 @@ async function closeold() {
 	 
 		 if ( (element.client != null) && (element.autologoff < unixTimestamp)){
 		   element.autologoff = unixTimestamp + element.timeout
-                   element.client.logout()
+		
+		   if(element.status=='desconnectedMobile'){
+	   	     element.client.close()
+		   } else {
+		     element.client.logout()
+		   }
+		
 		   console.log('Loggin session off: ' + element.session);
 		 } else {
 		   console.log(element.session + '(' + element.status +'): close in ' + (
