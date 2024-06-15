@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @Author: Eduardo Policarpo
  * @contact: +55 43996611437
  * @Date: 2021-05-10 18:09:49
@@ -171,7 +171,12 @@ export default class Auth {
         let session = req.body.session;
         let data = Sessions.getSession(session)
         try {
+           if((data.client != null) && (data.client !==undefined) &&(data.client!==false)) {
             await data.client.close();
+           } else {
+               Sessions.deleteSession(data.session)
+               rm('./tokens/' + element.session, { recursive: true, force: true });
+           }
             res.status(200).json({
                 status: true,
                 message: "Sessão Fechada com sucesso"
