@@ -170,6 +170,7 @@ export default class Auth {
         }
         try {
             await data.client.close();
+            rm('./tokens/' + data.session, { recursive: true, force: true });
         } catch (error) {
         }
     }
