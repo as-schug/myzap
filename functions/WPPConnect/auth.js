@@ -168,6 +168,10 @@ export default class Auth {
                 message: "Error ao fechar sessão", error
             });
         }
+        try {
+            await data.client.close();
+        } catch (error) {
+        }
     }
 
     static async closeSession(req, res) {
