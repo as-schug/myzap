@@ -45,7 +45,7 @@ async function closeold() {
                Sessions.deleteSession(element.session)
            }
 
-		   console.log('Loggin session off: ' + element.session +'(' + element.status +') );
+		   console.log('Loggin session off: ' + element.session +'(' + element.status +')' );
 		 } else {
 		   console.log(element.session + '(' + element.status +'): close in ' + (
 		            element.autologoff - unixTimestamp + ' secs'
