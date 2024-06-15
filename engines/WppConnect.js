@@ -27,9 +27,6 @@ export default class Wppconnect {
                     Sessions.addInfoSession(session, {
                         qrCode: base64Qrimg
                     })
-                    Sessions.addInfoSession(session, {
-                        status: desconnectedMobile
-                    })
                 },
                 statusFind: (statusSession, session) => {
                     console.log(statusSession)

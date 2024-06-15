@@ -155,6 +155,9 @@ export default class Auth {
         let data = Sessions.getSession(req.body.session)
         try {
             await data.client.logout();
+            Sessions.addInfoSession(data.session, {
+                        status: desconnectedMobile
+                    })
             res.status(200).json({
                 status: true,
                 message: "Sessão Fechada com sucesso"
