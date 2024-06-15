@@ -1,4 +1,4 @@
-
+﻿
 /*
  * @Author: Eduardo Policarpo
  * @contact: +55 43996611437
@@ -251,6 +251,27 @@ export default class Commands {
     try {
       let number = req.body.number + '@c.us';
       let profile = await data.client.getNumberProfile(number)
+      if (profile.numberExists) {
+        return res.status(200).json({
+          "result": 200,
+          "messages": "SUCCESS",
+          "profile": profile
+        })
+      }
+    } catch (error) {
+      return res.status(400).json({
+        "result": 400,
+        "status": "FAIL",
+        "profile": error
+      })
+    }
+  }
+
+  static async checkNumberStatus(req, res) {
+    let data = Sessions.getSession(req.body.session)
+    try {
+      let number = req.body.number + '@c.us';
+      let profile = await data.client.checkNumberStatus(number)
       if (profile.numberExists) {
         return res.status(200).json({
           "result": 200,

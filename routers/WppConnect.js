@@ -89,6 +89,7 @@ Router.post('/getBlockList', checkParams, Commands.getBlockList);
 
 Router.post('/getProfilePic', checkParams, checkNumber, Commands.getProfilePic);
 Router.post('/verifyNumber', checkParams, checkNumber, Commands.verifyNumber);
+Router.post('/checkNumberStatus', checkParams, checkNumber, Commands.checkNumberStatus);
 Router.post('/deleteChat', checkParams, checkNumber, Commands.deleteChat);
 Router.post('/clearChat', checkParams, checkNumber, Commands.clearChat);
 Router.post('/archiveChat', checkParams, checkNumber, Commands.archiveChat);
