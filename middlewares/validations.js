@@ -26,22 +26,26 @@ async function closeold() {
   	     let s = Sessions.getAll()
 	     s.forEach(element => {
                  //console.log(element.session + ' testing: ' + element.autologoff + '  ' +  unixTimestamp)
-		 if (element.client == null) {
-		    element.autologoff -= 6000
-		 } else if(element.status=='desconnectedMobile'){
+		 if ((element.client == null)||(element.status=='desconnectedMobile')||(element.status=='undefined')){
 		    element.autologoff -= 6000
 		 }
 	 
-		 if ( (element.client != null) && (element.autologoff < unixTimestamp)){
+		 if ( (element.autologoff < unixTimestamp)){
+
 		   element.autologoff = unixTimestamp + element.timeout
-		
-		   if(element.status=='desconnectedMobile'){
-	   	     element.client.close()
-		   } else {
-		     element.client.logout()
-		   }
-		
-		   console.log('Loggin session off: ' + element.session);
+
+           if((element.client != null) {
+
+               if(element.status=='desconnectedMobile'){
+                 element.client.close()
+               } else {
+                 element.client.logout()
+               }
+           } else {
+               Sessions.deleteSession(element.session)
+           }
+
+		   console.log('Loggin session off: ' + element.session +'(' + element.status +') );
 		 } else {
 		   console.log(element.session + '(' + element.status +'): close in ' + (
 		            element.autologoff - unixTimestamp + ' secs'
