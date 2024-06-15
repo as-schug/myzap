@@ -45,7 +45,8 @@ RUN apt-get update && apt-get install -y \
     git \
     jed \
     jq \
-    procps
+    procps \
+    vim
 
 RUN apt-get install curl -y \
     && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
