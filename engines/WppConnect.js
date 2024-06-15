@@ -13,6 +13,7 @@ import config from'../config.js';
 
 import { rm } from 'node:fs/promises';
 
+
 export default class Wppconnect {
 
     static async start(req, res, session) {
