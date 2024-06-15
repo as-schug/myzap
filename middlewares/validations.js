@@ -1,4 +1,4 @@
-/*
+﻿/*
  * @Author: Eduardo Policarpo
  * @contact: +55 43996611437
  * @Date: 2021-05-10 18:09:49
@@ -110,8 +110,10 @@ const checkParams = async (req, res, next) => {
         }
         else {
             let unixTimestamp = Math.floor(date.getTime() / 1000);
-	    data.autologoff = data.timeout + unixTimestamp			
-	    
+	    	if(element.status!='desconnectedMobile'){
+    	        data.autologoff = data.timeout + unixTimestamp
+            }
+
             const client = await data?.client?.isConnected();
             if (!client) {
                 return res.status(400).json({
