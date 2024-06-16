@@ -1,6 +1,6 @@
 #! /bin/bash
 
-MODULO=myzap
+MODULO=MYZAP
 if [ -f /etc/terasoft.conf ]
 then
   . /etc/terasoft.conf
