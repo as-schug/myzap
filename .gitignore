@@ -11,3 +11,4 @@ package-lock.json
 __recovery
 __history
 *.teralock
+*.disabled
