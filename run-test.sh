@@ -21,7 +21,7 @@ fi
 
 #docker build  -t myzap .
 
-/usr/bin/docker start $*  $MODULO || \
-   /usr/bin/docker run $ARGS --name $MODULO -p 3334:3333 -p 3333:3333 -v $RAIZ/data/$MODULO/tokens:/usr/src/app/tokens myzap
+/usr/bin/docker start $*  $MODULO-TEST || \
+   /usr/bin/docker run $ARGS --name $MODULO-TEST -p 3335:3333 -v $RAIZ/data/$MODULO/TEST/tokens:/usr/src/app/tokens myzap
 
 
