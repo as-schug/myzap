@@ -1,6 +1,7 @@
 FROM debian:bookworm-slim
 #FROM debian:11 
 WORKDIR /usr/src/app
+
 RUN apt-get update && apt-get install -y \
     gconf-service \
     libasound2 \
