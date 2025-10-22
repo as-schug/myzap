@@ -12,9 +12,9 @@ while [  true  ]
 do
   echo 'Updating...'
   #npm update
-  npm install
+#  npm install
   echo 'Starting...'
-  sleep 10
+#  sleep 10
   chmod 777 tokens
   npm start
 done
