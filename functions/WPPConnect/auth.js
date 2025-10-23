@@ -84,7 +84,8 @@ export default class Auth {
                             wh_status: req.body.wh_status,
                             wh_message: req.body.wh_message,
                             wh_qrcode: req.body.wh_qrcode,
-                            wh_connect: req.body.wh_connect,
+                            wh_connect: req.body.wh_connect, 
+			    wh_host: req.body.wh_host,	
                             wa_browser_id: req.headers['wa_browser_id'] ? req.headers['wa_browser_id'] : '',
                             wa_secret_bundle: req.headers['wa_secret_bundle'] ? req.headers['wa_secret_bundle'] : '',
                             wa_token_1: req.headers['wa_token_1'] ? req.headers['wa_token_1'] : '',
@@ -107,7 +108,8 @@ export default class Auth {
                                 'WAToken1': response.WAToken1,
                                 'WAToken2': response.WAToken2,
                                 'Engine': process.env.ENGINE,
-				timeout: timeout,
+ 			        'wh_host': req.body.wh_host,	
+				'timeout': timeout,
                             }
 			     if(config.apikey === undefined ) {
 			       let datajs = JSON.stringify(data,null,2)

@@ -27,6 +27,6 @@ fi
    -v $RAIZ/data/$MODULO/TEST/tokens:/usr/src/app/tokens \
    --net customnet \
    --ip 172.18.0.22 \
-   myzap
+   myzap-test
 
 

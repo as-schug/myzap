@@ -26,6 +26,6 @@ fi
    -v $RAIZ/data/$MODULO/MAIN2/tokens:/usr/src/app/tokens \
    --net customnet \
    --ip 172.18.0.23 \
-   myzap
+   myzap-web
 
 
