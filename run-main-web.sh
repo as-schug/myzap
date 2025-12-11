@@ -24,8 +24,8 @@ fi
 /usr/bin/docker start $*  $MODULO-MAIN-WEB || \
    /usr/bin/docker run $ARGS --name $MODULO-MAIN-WEB \
    -v $RAIZ/data/$MODULO/MAIN-WEB/tokens:/usr/src/app/tokens \
-   --net customnet \
-   --ip 172.18.0.24 \
+   --net $NET \
+   --ip $IP.24 \
    myzap
 
 
