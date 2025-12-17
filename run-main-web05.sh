@@ -25,6 +25,7 @@ fi
 
 /usr/bin/docker start $*  $MODULO-$SUBMODULO || \
    /usr/bin/docker run $ARGS --name $MODULO-$SUBMODULO \
+   -p 3505:3333 \
    -v $RAIZ/data/$MODULO/COMUM/tokens:/usr/src/app/tokens \
    --net $NET \
    --ip $IP.35 \
