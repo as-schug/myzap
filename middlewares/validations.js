@@ -45,18 +45,13 @@ async function closeold() {
             //   "conectado com sucesso" após atualização da lib — antes era inChat.
             // - desconnectedMobile: perdeu o celular mas mantém tokens
             // Qualquer outro estado → logout (DESTRÓI tokens, cliente re-escaneia QR).
-            if( (element.status=='desconnectedMobile') ||
-                (element.status=='inChat') ||
-                (element.status=='qrReadSuccess')) {
-                element.client.close()
-            } else {
-                element.client.logout()
-            }            
-               if( (element.status=='desconnectedMobile') || (element.status=='inChat')){
-                 element.client.close()
-               } else {
-                 element.client.logout()
-               }
+                if( (element.status=='desconnectedMobile') ||
+                    (element.status=='inChat') ||
+                    (element.status=='qrReadSuccess')) {
+                    element.client.close()
+                } else {
+                    element.client.logout()
+                }            
            } else {
                Sessions.deleteSession(element.session)
                rm('./tokens/' + element.session, { recursive: true, force: true });
