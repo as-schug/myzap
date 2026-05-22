@@ -38,6 +38,20 @@ async function closeold() {
 
            if((element.client != null) && (element.client !==undefined) &&(element.client!==false)) {
 
+            // Estados que justificam apenas SUSPEND (close, mantém tokens):
+            // - inChat: sessão operacional (estado pós-restart)
+            // - qrReadSuccess: sessão operacional recém-conectada (estado pós-login,
+            //   permanece até o próximo restart). ATENÇÃO: virou o estado padrão de
+            //   "conectado com sucesso" após atualização da lib — antes era inChat.
+            // - desconnectedMobile: perdeu o celular mas mantém tokens
+            // Qualquer outro estado → logout (DESTRÓI tokens, cliente re-escaneia QR).
+            if( (element.status=='desconnectedMobile') ||
+                (element.status=='inChat') ||
+                (element.status=='qrReadSuccess')) {
+                element.client.close()
+            } else {
+                element.client.logout()
+            }            
                if( (element.status=='desconnectedMobile') || (element.status=='inChat')){
                  element.client.close()
                } else {
