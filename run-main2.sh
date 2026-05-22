@@ -1,6 +1,8 @@
 #! /bin/bash
 
 MODULO=MYZAP
+SUBMODULO=MAIN2
+
 if [ -f /etc/terasoft.conf ]
 then
   . /etc/terasoft.conf
@@ -21,11 +23,31 @@ fi
 
 #docker build  -t myzap .
 
-/usr/bin/docker start $*  $MODULO-MAIN2 || \
-   /usr/bin/docker run $ARGS --name $MODULO-MAIN2 -p 3336:3333 \
-   -v $RAIZ/data/$MODULO/MAIN2/tokens:/usr/src/app/tokens \
-   --net customnet \
-   --ip 172.18.0.23 \
+/usr/bin/docker start $*  $MODULO-$SUBMODULO || \
+   /usr/bin/docker run $ARGS --name $MODULO-$SUBMODULO \
+   -p 3499:3333 \
+   -v $RAIZ/data/$MODULO/$SUBMODULO/tokens:/usr/src/app/tokens \
+   --net $NET \
+   --ip $IP.29 \
    myzap-web
 
+
+	   
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
+			     
 
