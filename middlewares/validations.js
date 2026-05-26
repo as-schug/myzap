@@ -127,7 +127,8 @@ const checkParams = async (req, res, next) => {
         }
         else {
             let unixTimestamp = Math.floor(date.getTime() / 1000);
-	    	if((data.status!='desconnectedMobile') && (data.status!==undefined)){
+	    	// /SessionState é só consulta: não conta como atividade, não renova o autologoff.
+	    	if((data.status!='desconnectedMobile') && (data.status!==undefined) && (req.path !== '/SessionState')){
     	        data.autologoff = data.timeout + unixTimestamp
             }
 
