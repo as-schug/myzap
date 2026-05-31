@@ -84,6 +84,31 @@ Executa antes de quase toda requisição:
 4. Verifica conectividade real: na engine 2 chama `data.client.isConnected()` e atualiza o relógio de auto-logoff.
 5. Mantém um laço de fundo (`closeold()`) que a cada ~100 s desconecta/encerra sessões que excederam o `timeout` de inatividade.
 
+### Sobre o TIMEOUT e o auto-logoff
+
+O `timeout` é o tempo de **inatividade** (em segundos) que uma sessão pode ficar sem receber requisições antes de ser encerrada automaticamente. A lógica está espalhada por três arquivos:
+
+**1. Valor efetivo — precedência** (em `Auth.start`, [auth.js](../functions/WPPConnect/auth.js)):
+```
+req.body.timeout  →  se vazio/null/0, cai para  config.timeout (.env)
+```
+Ou seja: o cliente pode definir o `timeout` por sessão no `POST /start`; se não enviar, vale o valor global do `.env`.
+
+**2. Fallback global** (em [config.js](../config.js)):
+```js
+timeout: (testHas(TIMEOUT) ? 9999999 : +TIMEOUT)
+```
+`testHas()` é `true` para `null`, `undefined`, `''`, `false`, `0`. Portanto, se `TIMEOUT` estiver **ausente ou vazio** no `.env`, o fallback vira `9999999` s (≈ 115 dias) — na prática, "nunca expira".
+
+**3. Relógio de expiração — `autologoff`**:
+- Em `Auth.start`, ao criar a sessão: `autologoff = timeout + agora`.
+- Em `checkParams` ([validations.js](../middlewares/validations.js)), **cada requisição** (exceto `/SessionState`) renova: `autologoff = timeout + agora`. Por isso `/SessionState` é só consulta e **não** conta como atividade — evita que um monitor mantenha a sessão viva para sempre.
+- O laço `closeold()` roda a cada ~100 s. Quando `autologoff < agora`, encerra a sessão; se o `client` está caído (`null`/`desconnectedMobile`/`undefined`), antecipa a expiração decrementando 6000 a cada ciclo.
+
+**4. Encerramento — `close` vs `logout`**: ao expirar, a decisão depende do status (ver §12):
+- `inChat`, `qrReadSuccess`, `desconnectedMobile` → `client.close()` (**suspende**, mantém os tokens — reconecta sem QR).
+- qualquer outro status → `client.logout()` (**destrói** os tokens — exige reescanear o QR).
+
 ### `checkNumber` ([checkNumber.js](../middlewares/checkNumber.js))
 Valida e formata o destinatário antes do envio:
 - Se `isGroup === true`, passa direto (grupos usam sufixo `@g.us`).
@@ -220,3 +245,48 @@ Engine, timeout
 | `*.sh` (`run-main*.sh`, `up.sh`, `build.sh`, etc.) | scripts de execução/operação |
 | `public/`, `views/index.ejs` | tela web que exibe o QR code (`GET /start`) |
 | `docs/CHANGELOG.md` | histórico de mudanças |
+| `docs/CONFIGURACAO.md` | referência das variáveis do `.env` |
+| `docs/API.md` | referência de endpoints e payloads de webhook |
+
+---
+
+## 12. Estados da sessão (máquina de estados)
+
+A engine reporta o status da conexão pelo callback `statusFind` (WPPConnect) / eventos equivalentes, e o valor é gravado em `Sessions.addInfoSession(session, { status })`. Esse status governa decisões críticas em `validations.js`, `webhooks.js` e nos motores.
+
+| Status | Significado | Tratamento ao expirar/encerrar |
+|--------|-------------|-------------------------------|
+| `inChat` | Sessão operacional (estado pós-restart). | `close()` — mantém tokens |
+| `qrReadSuccess` | Recém-conectada (estado pós-login). Após atualização da lib, virou o status padrão de "conectado", até o próximo restart. | `close()` — mantém tokens |
+| `chatsAvailable` / `isLogged` | Logada, carregando/disponível. | considerada conectada |
+| `desconnectedMobile` | Perdeu o celular, mas mantém os tokens. | `close()` — mantém tokens |
+| `notLogged` | Não autenticada. | dispara `wh_connect`; se `wipe`, fecha |
+| `browserClose` | Navegador fechado. | remove a sessão da memória |
+| `qrReadFail` / `serverClose` | Falha de leitura do QR / servidor caiu. | emite `whatsapp-status: false` |
+| `autocloseCalled` | `autoClose` (90 s sem escanear o QR) disparou. | **apaga `./tokens/<sessão>`** + remove do Firestore + da memória |
+
+**Regra de ouro do encerramento** (`closeold()` e `Auth.closeSession`): `inChat`, `qrReadSuccess`, `desconnectedMobile` → `close()` (suspende, **preserva** tokens, reconecta sem QR); qualquer outro → `logout()` (**destrói** os tokens, exige reescanear).
+
+**`wipe`**: `wipeData` marca a sessão com `wipe: true`. Quando o próximo evento de conexão chega (`notLogged`/`inChat`), `wh_connect` força `close()`/`logout()` e apaga `./tokens/<sessão>` — usado para zerar completamente uma sessão.
+
+---
+
+## 13. Diferenças entre as engines
+
+Embora `engines.js` ofereça três engines, **elas não têm paridade de recursos**. A engine 2 (WPPConnect) é a única completa.
+
+| Recurso | `1` WhatsappWebJS | `2` WPPConnect | `3` Venom |
+|---------|:---:|:---:|:---:|
+| `functions/<engine>/auth.js` | ❌ (usa o do WPPConnect) | ✅ | ✅ |
+| `functions/<engine>/mensagens.js` | ✅ | ✅ | ✅ |
+| `functions/<engine>/commands.js` | ❌ | ✅ | ✅ |
+| `functions/<engine>/groups.js` | ❌ | ✅ | ✅ |
+| `functions/<engine>/status.js` | ✅ | ✅ | ✅ |
+| `sendButton` / `getOrderbyMsg` | ❌ | ✅ | parcial |
+
+Observações importantes para quem troca a `ENGINE`:
+- **Engine 1 (WhatsappWebJS)**: o roteador `routers/WhatsappWebJS.js` importa `Auth` de `functions/WPPConnect/auth.js` (não há `auth.js` próprio), e não expõe rotas de `commands`/`groups`. É a engine menos completa.
+- **Diferenças de API interna entre libs**: em `checkParams`, a engine 1 usa `client.isOnline()`/`isRegisteredUser()`, enquanto as engines 2/3 usam `client.isConnected()`/`checkNumberStatus()`. Em `events.js`, a engine 1 escuta `client.on('message')`/`message_ack`, e as demais usam `client.onMessage`/`onAck`.
+- **IDs de mensagem**: na engine 1 o id vem como `message.id._serialized`; nas demais, como `message.id`. Isso afeta o payload do webhook `wh_message` (ver [API.md](API.md)).
+
+A recomendação do projeto (e do `.env_exemplo`, `ENGINE=2`) é **usar WPPConnect** salvo necessidade específica.
