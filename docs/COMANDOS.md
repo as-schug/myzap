@@ -89,7 +89,7 @@ Flags: `-s` sessão · `-c` comando (default `SessionState`) · `-h` host · `-n
 
 Sobre o **timeout** (`-t`):
 - com `-t N` → envia `"timeout": N`;
-- **sem** `-t` → envia `"timeout": null` e **o servidor decide** (fallback do `.env`, ver [FUNCIONAMENTO.md](FUNCIONAMENTO.md) §sobre TIMEOUT).
+- **sem** `-t` → envia `"timeout": null` e **o servidor decide** (fallback do `.env`, ver [FUNCIONAMENTO.md](FUNCIONAMENTO.md#sobre-o-timeout-e-o-auto-logoff)).
 - O `timeout` **não** é lido do `session.js` de propósito (evita auto-realimentação do valor gravado).
 
 Lê do `tokens/<sessão>/session.js` (via `jq`): `sessionkey`, `apitoken`, `wh_status`, `wh_message`, `wh_qrcode`, `wh_connect`. Requer `jq` instalado.
