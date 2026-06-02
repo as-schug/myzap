@@ -1,6 +1,6 @@
 # MyZap 2.0 — Referência da API
 
-Endpoints REST e contratos de webhook. A lista abaixo reflete a engine **WPPConnect** (`ENGINE=2`, [routers/WppConnect.js](../routers/WppConnect.js)), a mais completa. Outras engines podem não expor todos os endpoints — ver [FUNCIONAMENTO.md §13](FUNCIONAMENTO.md#13-diferenças-entre-as-engines).
+Endpoints REST e contratos de webhook. A lista abaixo reflete a engine **WPPConnect** (`ENGINE=2`, [routers/WppConnect.js](../routers/WppConnect.js)) — a única engine suportada (ver [FUNCIONAMENTO.md §13](FUNCIONAMENTO.md#13-engines-legadas-removidas)).
 
 > Base URL e porta conforme o `.env`/mapeamento Docker (por padrão `http://<host>:3333`). Corpo das requisições em JSON (`Content-Type: application/json`).
 
@@ -204,7 +204,7 @@ Campos adicionais por tipo:
 - **vcard**: `contactName`, `contactVcard`
 - **order**: `content`
 
-> Diferença entre engines: na engine 1 (WhatsappWebJS) o `id` vem como `message.id._serialized`; nas engines 2/3 vem como `message.id`.
+> No WPPConnect, o `id` da mensagem recebida vem como `message.id`.
 
 ### `wh_status` — `MESSAGE_STATUS`
 
