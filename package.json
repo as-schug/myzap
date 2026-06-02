@@ -18,8 +18,7 @@
     "nodejs",
     "opensource",
     "javascript",
-    "wppconnect",
-    "venom"
+    "wppconnect"
   ],
   "author": "Eduardo Policarpo",
   "license": "MIT",
@@ -54,8 +53,6 @@
     "superagent-queue": "^*",
     "url-exists": "^*",
     "valid-url": "^*",
-    "venom-bot": "^*",
-    "whatsapp-web.js": "^*",
     "yoo-hoo": "^*"
   }
 }
