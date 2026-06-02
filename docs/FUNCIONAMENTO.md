@@ -29,17 +29,15 @@ API REST em Node.js (ESM) que integra o WhatsApp a qualquer aplicação via requ
 - **Camada de eventos/webhooks** — escuta o WhatsApp e empurra notificações ao cliente.
 - **Camada de persistência** — Firestore (ou arquivo local) guarda sessões e tokens.
 
-### Engines suportadas
+### Engine suportada
 
-A engine é escolhida pela variável de ambiente `ENGINE` ([engines.js](../engines.js)):
+Atualmente o projeto suporta **uma única engine**: o **WPPConnect**. As engines legadas WhatsappWebJS e Venom foram removidas (ver §13). A variável de ambiente `ENGINE` ([engines.js](../engines.js)) é mantida por compatibilidade e deve valer `2`:
 
 | `ENGINE` | Engine | Biblioteca |
 |----------|--------|------------|
-| `1` | WhatsappWebJS | `whatsapp-web.js` |
 | `2` | WPPConnect | `@wppconnect-team/wppconnect` |
-| `3` | Venom | `venom-bot` |
 
-Cada engine tem **um arquivo de motor** (`engines/`), **um roteador** (`routers/`) e **um conjunto de funções** (`functions/`). O conjunto mais completo e ativo é o do **WPPConnect** (engine 2).
+A engine tem **um arquivo de motor** (`engines/WppConnect.js`), **um roteador** (`routers/WppConnect.js`) e **um conjunto de funções** (`functions/WPPConnect/`).
 
 ---
 
@@ -120,7 +118,7 @@ Valida e formata o destinatário antes do envio:
 
 Cada engine é uma classe estática com (principalmente) `start()` e `getToken()`. Responsabilidades do `start()`:
 
-1. **Criar o cliente** da biblioteca (`wppconnect.create()` / `new Client()` / `venom.create()`), abrindo um Chromium headless que carrega o WhatsApp Web.
+1. **Criar o cliente** da biblioteca (`wppconnect.create()`), abrindo um Chromium headless que carrega o WhatsApp Web.
 2. **Emitir o QR code**: a biblioteca dispara um callback/evento com o QR em base64. O motor o repassa por **Socket.io** (`req.io.emit`) para exibição imediata e pelo **webhook** `wh_qrcode`.
 3. **Rastrear o status** da conexão (`statusFind`/eventos `ready`, `authenticated`, `disconnected`). Transições como `isLogged`, `qrReadSuccess`, `inChat` são gravadas via `Sessions.addInfoSession()` e notificadas pelo webhook `wh_connect`.
 4. **Armazenar o cliente** na camada de sessões em memória (`Sessions.addInfoSession`), para que as funções o reutilizem.
@@ -271,22 +269,16 @@ A engine reporta o status da conexão pelo callback `statusFind` (WPPConnect) / 
 
 ---
 
-## 13. Diferenças entre as engines
+## 13. Engines legadas removidas
 
-Embora `engines.js` ofereça três engines, **elas não têm paridade de recursos**. A engine 2 (WPPConnect) é a única completa.
+O projeto já ofereceu três engines (`1` WhatsappWebJS, `2` WPPConnect, `3` Venom), mas **WhatsappWebJS e Venom foram removidas** por estarem obsoletas/incompletas. Restou apenas o **WPPConnect**, que era a única engine completa e ativa.
 
-| Recurso | `1` WhatsappWebJS | `2` WPPConnect | `3` Venom |
-|---------|:---:|:---:|:---:|
-| `functions/<engine>/auth.js` | ❌ (usa o do WPPConnect) | ✅ | ✅ |
-| `functions/<engine>/mensagens.js` | ✅ | ✅ | ✅ |
-| `functions/<engine>/commands.js` | ❌ | ✅ | ✅ |
-| `functions/<engine>/groups.js` | ❌ | ✅ | ✅ |
-| `functions/<engine>/status.js` | ✅ | ✅ | ✅ |
-| `sendButton` / `getOrderbyMsg` | ❌ | ✅ | parcial |
+O que a remoção envolveu:
+- Exclusão dos arquivos `engines/WhatsappWebJS.js`, `engines/Venom.js`, `routers/WhatsappWebJS.js`, `routers/Venom.js`, `functions/WhatsappWebJS/` e `functions/Venom/`.
+- `engines.js` passou a registrar somente a chave `2` (WPPConnect) — mantida por compatibilidade com os `.env` existentes (`ENGINE=2`).
+- Remoção dos ramos condicionais `engine === '1'` em `controllers/events.js`, `middlewares/checkNumber.js` e `middlewares/validations.js` (e do helper morto `checkRegisteredNumber`), que existiam só para a API da `whatsapp-web.js`.
+- Remoção das dependências `whatsapp-web.js` e `venom-bot` do `package.json`.
 
-Observações importantes para quem troca a `ENGINE`:
-- **Engine 1 (WhatsappWebJS)**: o roteador `routers/WhatsappWebJS.js` importa `Auth` de `functions/WPPConnect/auth.js` (não há `auth.js` próprio), e não expõe rotas de `commands`/`groups`. É a engine menos completa.
-- **Diferenças de API interna entre libs**: em `checkParams`, a engine 1 usa `client.isOnline()`/`isRegisteredUser()`, enquanto as engines 2/3 usam `client.isConnected()`/`checkNumberStatus()`. Em `events.js`, a engine 1 escuta `client.on('message')`/`message_ack`, e as demais usam `client.onMessage`/`onAck`.
-- **IDs de mensagem**: na engine 1 o id vem como `message.id._serialized`; nas demais, como `message.id`. Isso afeta o payload do webhook `wh_message` (ver [API.md](API.md)).
+> Por que removidas: a WhatsappWebJS não tinha `auth.js`/`commands.js`/`groups.js` próprios (importava o `Auth` do WPPConnect e não expunha rotas de comandos/grupos); a `venom-bot` está praticamente descontinuada. Manter as três multiplicava o código condicional por engine sem benefício prático.
 
-A recomendação do projeto (e do `.env_exemplo`, `ENGINE=2`) é **usar WPPConnect** salvo necessidade específica.
+Para adicionar uma nova engine no futuro, o padrão continua o mesmo: criar `engines/<Nome>.js`, `routers/<Nome>.js`, `functions/<Nome>/*` e registrar uma nova chave em `engines.js`.
