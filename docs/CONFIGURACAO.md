@@ -15,7 +15,7 @@ cp .env_exemplo .env   # e edite os valores
 | `PORT` | `3333` | Porta HTTP em que a API escuta (dentro do container; o mapeamento externo é feito pelos scripts `run-*.sh`). |
 | `HOST` | `http://localhost` | URL base da API, com esquema (`http`/`https`). Usada pelo `startAllSessions` para chamar o próprio `/start`. |
 | `TOKEN` | `minhachave` | **Token global da API**. Toda criação de sessão (`POST /start`) exige o header `apitoken` igual a este valor. |
-| `ENGINE` | `2` | Engine de automação: `1`=WhatsappWebJS, `2`=WPPConnect, `3`=Venom. Ver [FUNCIONAMENTO.md §13](FUNCIONAMENTO.md#13-diferenças-entre-as-engines). |
+| `ENGINE` | `2` | Engine de automação. Deve ser `2` (WPPConnect) — única engine suportada; as legadas WhatsappWebJS/Venom foram removidas. Ver [FUNCIONAMENTO.md §13](FUNCIONAMENTO.md#13-engines-legadas-removidas). |
 | `SESSIONS_FIELD` | `Sessions` | Nome da coleção no Firestore onde as sessões são persistidas. |
 
 ## SSL / HTTPS
