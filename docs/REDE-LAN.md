@@ -56,7 +56,9 @@ Cada servidor com a sua faixa e uma rota por faixa no Windows.
 ## Teste
 
 `run-lantest.sh` sobe `MYZAP-LANTEST` em `$IP.20` (sem `-p`, tokens próprios em `data/MYZAP/LANTEST`). Usa o mesmo
-final `.20` do `run-test.sh` (desativado no `.222`) — não ligar os dois juntos.
+final `.20` do `run-test.sh` (desativado no `.222`) — não ligar os dois juntos. No `.222` ele tem
+`run-lantest.sh.disabled` (não sobe no boot; à mão: `./run-lantest.sh`) — ver "Subida automática e `.disabled`" no
+[COMANDOS.md](COMANDOS.md).
 
 Testado em 15/10/2026 no `.222`: rede `lan` + `MYZAP-LANTEST` (imagem `myzap-web`). Da `.96`, com a rota temporária,
 `http://172.30.0.20:3333/` respondeu (404 da raiz da API) em 4 ms; sem a rota, sem resposta. Nenhuma regra de

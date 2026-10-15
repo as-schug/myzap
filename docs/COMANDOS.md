@@ -48,6 +48,22 @@ Todos montam `RAIZ/data/MYZAP/<SUBMODULO>/tokens` em `/usr/src/app/tokens` (pers
 ./run-main.sh -i           # reinicia anexando ao terminal
 ```
 
+### Subida automática e `.disabled`
+
+No servidor, o `/mnt/hdd/DOCKER/startall.sh` (fora deste repositório) roda, no boot, **todo** `$RAIZ/*/run*.sh` que
+**não** tenha um arquivo `<script>.disabled` ao lado. Desligar uma instância da subida automática = criar o arquivo
+vazio; religar = apagar:
+
+```bash
+touch run-test.sh.disabled     # run-test.sh deixa de subir no boot (continua rodando à mão: ./run-test.sh)
+rm run-test.sh.disabled        # volta a subir
+ls run-*.disabled              # o que está desligado neste servidor
+```
+
+Os `*.disabled` são ignorados pelo git (`.gitignore`): o mesmo repositório roda em servidores diferentes e cada um
+escolhe o que sobe. Instância nova = só criar o `run-*.sh` (entra no próximo boot, sem cadastro em lugar nenhum).
+No `.222` (15/10/2026): desligados `run-main2.sh`, `run-main-web.sh`, `run-test.sh` e `run-lantest.sh`.
+
 ### Rede `lan` — acesso direto pelo IP a partir da rede interna
 
 ```bash
