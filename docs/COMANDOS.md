@@ -38,6 +38,7 @@ Cada script faz `docker start <nome> || docker run ...`: tenta reiniciar o conta
 | `run-main-web04.sh` | MYZAP-MAIN-WEB04 | 3504:3333 | .34 | myzap-web |
 | `run-main-web05.sh` | MYZAP-MAIN-WEB05 | 3505:3333 | .35 | myzap-web |
 | `run-test.sh` | MYZAP-TEST | 3800:3333 | .20 | myzap-web |
+| `run-lantest.sh` | MYZAP-LANTEST | (sem `-p`) | .20 | myzap-web |
 | `rodatestes.sh` | test.myzap | 3335:3333 | — | myzap |
 
 Todos montam `RAIZ/data/MYZAP/<SUBMODULO>/tokens` em `/usr/src/app/tokens` (persistência das sessões).
@@ -46,6 +47,16 @@ Todos montam `RAIZ/data/MYZAP/<SUBMODULO>/tokens` em `/usr/src/app/tokens` (pers
 ./run-main.sh              # sobe/reinicia em background (-d por padrão)
 ./run-main.sh -i           # reinicia anexando ao terminal
 ```
+
+### Rede `lan` — acesso direto pelo IP a partir da rede interna
+
+```bash
+./cria-rede-lan.sh         # cria a rede $NET na faixa $IP.0/16 sem a proteção de acesso direto do Docker 28+
+./run-lantest.sh           # MYZAP-LANTEST em $IP.20 (sem -p); no Windows: route -p add <faixa> mask 255.255.0.0 <servidor>
+```
+
+No `.222` o `/etc/terasoft.conf` tem `NET=lan` e `IP=172.30.0` (desde 15/10/2026): os bots vão para a `lan` quando
+forem **recriados** (`docker rm -f` + o `run-*.sh`). Detalhes e faixas a evitar: [REDE-LAN.md](REDE-LAN.md).
 
 ---
 
